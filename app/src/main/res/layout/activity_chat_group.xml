@@ -131,6 +131,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/_10sdp"
             android:layout_centerVertical="true"
+            android:visibility="gone"
             />
     </RelativeLayout>
     <TextView
