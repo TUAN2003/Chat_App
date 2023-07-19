@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BottomNavigationTextStyleActivated" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:fontFamily">@font/roboto_medium</item> <!-- Thay đổi fontFamily tùy ý -->
+        <item name="android:textSize">@dimen/_11ssp</item> <!-- Thay đổi cỡ chữ tùy ý -->
+        <item name="itemIconTint">@color/main_color_blue</item>
+    </style>
+    <style name="heading_main" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textSize">
+            18sp
+        </item>
+    </style>
+</resources>

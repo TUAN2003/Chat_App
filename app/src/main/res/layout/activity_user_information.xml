@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:overScrollMode="never"
+    android:paddingStart="@dimen/_20sdp"
+    android:paddingEnd="@dimen/_20sdp"
+    android:paddingBottom="@dimen/_5sdp"
+    android:scrollbars="none"
+    tools:context=".activities.SignInActivity">
+
+    <RelativeLayout
+        android:id="@+id/coreLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:padding="@dimen/_5sdp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/backButton"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:src="@drawable/ic_arrow_back_round"
+            android:layout_alignParentStart="true" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/sendButton"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:src="@drawable/round_person_add_alt_24"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@id/backButton"
+            android:layout_alignBottom="@id/backButton"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="@font/quicksand_bold"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:text="@string/profile"
+            android:textSize="19sp"
+            android:clickable="false"
+            android:layout_alignTop="@id/backButton"
+            android:layout_alignBottom="@id/backButton"/>
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/imageProfile"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:contentDescription="@string/todo"
+            android:scaleType="centerCrop"
+            android:src="@drawable/avatar_default_2"
+            app:riv_oval="true" />
+        <TextView
+            android:id="@+id/textName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imageProfile"
+            android:layout_alignBottom="@id/inputName"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:fontFamily="@font/quicksand_semibold"
+            android:gravity="center_vertical"
+            android:labelFor="@id/inputName"
+            android:text="@string/name"
+            android:textColor="@color/main_color_blue"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/inputName"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/imageProfile"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_toEndOf="@id/textName"
+            android:autofillHints="name"
+            android:fontFamily="@font/quicksand_semibold"
+            android:inputType="text"
+            android:enabled="false"
+            android:textSize="@dimen/_13ssp" />
+
+        <TextView
+            android:id="@+id/textEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textName"
+            android:layout_alignBottom="@id/inputEmail"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:fontFamily="@font/quicksand_semibold"
+            android:gravity="center_vertical"
+            android:labelFor="@id/inputEmail"
+            android:text="@string/email"
+            android:layout_alignEnd="@id/textName"
+            android:textColor="@color/main_color_blue"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/inputEmail"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/inputName"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:ellipsize="end"
+            android:layout_toEndOf="@id/textName"
+            android:autofillHints="name"
+            android:enabled="false"
+            android:fontFamily="@font/quicksand_semibold"
+            android:inputType="textEmailAddress"
+            android:textSize="@dimen/_13ssp" />
+    </RelativeLayout>
+</ScrollView>

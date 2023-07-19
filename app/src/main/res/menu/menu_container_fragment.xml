@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/itemMessage"
+        android:icon="@drawable/round_chat_bubble_24"
+        android:title="@string/label_message" />
+    <item
+        android:id="@+id/itemMessageGroup"
+        android:icon="@drawable/users_alt_fill_24"
+        android:title="@string/label_group_chat" />
+    <item
+        android:id="@+id/itemFriends"
+        android:icon="@drawable/round_perm_contact_calendar_24"
+        android:title="@string/label_friends" />
+    <item
+        android:id="@+id/itemChatBot"
+        android:icon="@drawable/user_robot_fill_24"
+        android:title="@string/chat_bot" />
+</menu>
