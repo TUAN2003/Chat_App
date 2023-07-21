@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.chat_app.R;
 import com.example.chat_app.adapters.ChatAdapter;
 import com.example.chat_app.databinding.ActivityChatBinding;
 import com.example.chat_app.models.ChatMessage;
