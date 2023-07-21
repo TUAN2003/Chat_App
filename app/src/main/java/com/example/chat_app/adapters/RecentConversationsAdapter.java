@@ -10,16 +10,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.chat_app.R;
 import com.example.chat_app.databinding.ItemContainerRecentConversionBinding;
+import com.example.chat_app.fragments.HomeFragment;
 import com.example.chat_app.listeners.ConversionListener;
 import com.example.chat_app.models.ChatMessage;
 import com.example.chat_app.models.User;
 import com.example.chat_app.utilities.FunctionGlobal;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConversationsAdapter.ConversionViewHolder> {
     private final List<ChatMessage> chatMessages;
@@ -76,15 +76,17 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
                 user.image = chatMessage.conversionImage;
                 conversionListener.onConversionClicked(user);
             });
+            binding.getRoot().setOnLongClickListener(v -> {
+                final BottomSheetDialog bottomSheetDialog=new BottomSheetDialog(((HomeFragment)conversionListener).requireContext());
+                bottomSheetDialog.setContentView(R.layout.alert_dialog);
+                bottomSheetDialog.show();
+                return true;
+            });
         }
     }
 
     private Bitmap getConversionImage(String encodedImage) {
         byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-    }
-
-    private String getReadableDateTime(Date date) {
-        return new SimpleDateFormat("hh:mm:ss a", Locale.getDefault()).format(date);
     }
 }
