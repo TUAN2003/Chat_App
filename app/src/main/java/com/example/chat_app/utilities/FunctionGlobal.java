@@ -100,7 +100,7 @@ public final class FunctionGlobal {
         String strYourDate=simpleDateFormat.format(date);
         String strNowDate=simpleDateFormat.format(tempDate.getTime());
         if(strNowDate.equals(strYourDate)){
-            simpleDateFormat.applyPattern("hh:mm");
+            simpleDateFormat.applyPattern("HH:mm");
             return simpleDateFormat.format(date);
         }
         return checkTheDateToShow(inpDate, tempDate);
