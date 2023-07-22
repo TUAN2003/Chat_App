@@ -60,7 +60,7 @@ public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentC
             binding.imageProfile.setImageBitmap(getConversionImage(groupChat.getEnCodeImage()));
             binding.textName.setText(groupChat.getNameGroup());
             binding.textRecentMessage.setText(groupChat.getLastMessage());
-            binding.textTimeStamp.setText(FunctionGlobal.checkTheDateToShow(groupChat.getDate()));
+            binding.textTimeStamp.setText(FunctionGlobal.dateTimeFormat(groupChat.getDate()));
             if(position == mCount-1)
                 binding.lineBottom.setVisibility(View.INVISIBLE);
             else

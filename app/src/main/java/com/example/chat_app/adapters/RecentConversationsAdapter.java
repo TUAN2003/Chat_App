@@ -64,7 +64,7 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
             binding.imageProfile.setImageBitmap(getConversionImage(chatMessage.conversionImage));
             binding.textName.setText(chatMessage.conversionName);
             binding.textRecentMessage.setText(chatMessage.message);
-            binding.textTimeStamp.setText(FunctionGlobal.checkTheDateToShow(chatMessage.dateObject));
+            binding.textTimeStamp.setText(FunctionGlobal.dateTimeFormat(chatMessage.dateObject));
             if(position == mCount-1)
                 binding.lineBottom.setVisibility(View.INVISIBLE);
             else

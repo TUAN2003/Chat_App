@@ -26,7 +26,7 @@ import java.util.Date;
 
 public final class FunctionGlobal {
     public static void openDialog
-            (Context context, @LayoutRes int layoutResID, View.OnClickListener event,int idButtonNegative,int idButtonPositive) {
+            (Context context, @LayoutRes int layoutResID, View.OnClickListener event, int idButtonNegative, int idButtonPositive) {
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(layoutResID);
 
@@ -49,19 +49,16 @@ public final class FunctionGlobal {
     }
 
     @SuppressLint("SimpleDateFormat")
-    public static String checkTheDateToShow(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+    public static String checkTheDateToShow(Calendar yourDate, Calendar tempDate) {
         String dayOfWeekString = "";
-        Calendar beforeSunday = Calendar.getInstance();
-        int dayOfWeek = beforeSunday.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY ?
-                beforeSunday.get(Calendar.DAY_OF_WEEK) : 8;
-        beforeSunday.add(Calendar.DAY_OF_MONTH, -dayOfWeek + 1);
-        beforeSunday.set(Calendar.HOUR, 23);
-        beforeSunday.set(Calendar.MINUTE, 59);
-        beforeSunday.set(Calendar.SECOND, 59);
-        if (calendar.after(beforeSunday)) {
-            dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        int dayOfWeek = tempDate.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY ?
+                tempDate.get(Calendar.DAY_OF_WEEK) : 8;
+        tempDate.add(Calendar.DAY_OF_MONTH, -dayOfWeek + 1);
+        tempDate.set(Calendar.HOUR, 23);
+        tempDate.set(Calendar.MINUTE, 59);
+        tempDate.set(Calendar.SECOND, 59);
+        if (yourDate.after(tempDate)) {
+            dayOfWeek = yourDate.get(Calendar.DAY_OF_WEEK);
             switch (dayOfWeek) {
                 case Calendar.SUNDAY:
                     dayOfWeekString = "CN";
@@ -86,10 +83,27 @@ public final class FunctionGlobal {
                     break;
             }
         } else {
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM");
-            dayOfWeekString = dateFormat.format(date);
+            DateFormat dateFormat = new SimpleDateFormat("d/M");
+            dayOfWeekString = dateFormat.format(yourDate.getTime());
         }
         return dayOfWeekString;
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public static String dateTimeFormat(Date date) {
+        Calendar inpDate = Calendar.getInstance();
+        inpDate.setTime(date);
+        Calendar tempDate = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("d/M/yyyy");
+        if (inpDate.get(Calendar.YEAR) < tempDate.get(Calendar.YEAR))
+            return simpleDateFormat.format(date);
+        String strYourDate=simpleDateFormat.format(date);
+        String strNowDate=simpleDateFormat.format(tempDate.getTime());
+        if(strNowDate.equals(strYourDate)){
+            simpleDateFormat.applyPattern("hh:mm");
+            return simpleDateFormat.format(date);
+        }
+        return checkTheDateToShow(inpDate, tempDate);
     }
 
     public static boolean isConnectedNetwork(Context context) {
