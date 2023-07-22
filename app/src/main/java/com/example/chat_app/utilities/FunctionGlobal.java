@@ -50,6 +50,8 @@ public final class FunctionGlobal {
 
     @SuppressLint("SimpleDateFormat")
     public static String checkTheDateToShow(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
         String dayOfWeekString = "";
         Calendar beforeSunday = Calendar.getInstance();
         int dayOfWeek = beforeSunday.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY ?
@@ -58,8 +60,6 @@ public final class FunctionGlobal {
         beforeSunday.set(Calendar.HOUR, 23);
         beforeSunday.set(Calendar.MINUTE, 59);
         beforeSunday.set(Calendar.SECOND, 59);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
         if (calendar.after(beforeSunday)) {
             dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
             switch (dayOfWeek) {
