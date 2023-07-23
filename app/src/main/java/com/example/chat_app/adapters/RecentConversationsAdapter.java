@@ -29,7 +29,7 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
     public RecentConversationsAdapter(List<ChatMessage> chatMessages, ConversionListener conversionListener) {
         this.chatMessages = chatMessages;
         this.conversionListener = conversionListener;
-        this.mCount=chatMessages.size();
+        this.mCount = chatMessages.size();
     }
 
     @NonNull
@@ -43,12 +43,12 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
 
     @Override
     public void onBindViewHolder(@NonNull ConversionViewHolder holder, int position) {
-        holder.setData(chatMessages.get(position),position);
+        holder.setData(chatMessages.get(position), position);
     }
 
     @Override
     public int getItemCount() {
-        mCount=chatMessages.size();
+        mCount = chatMessages.size();
         return mCount;
     }
 
@@ -60,25 +60,30 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
             binding = itemContainerRecentConversationBinding;
         }
 
-        void setData(ChatMessage chatMessage,int position) {
+        void setData(ChatMessage chatMessage, int position) {
             binding.imageProfile.setImageBitmap(getConversionImage(chatMessage.conversionImage));
             binding.textName.setText(chatMessage.conversionName);
             binding.textRecentMessage.setText(chatMessage.message);
             binding.textTimeStamp.setText(FunctionGlobal.dateTimeFormat(chatMessage.dateObject));
             binding.getRoot().setOnClickListener(v -> {
                 User user = new User();
-                user.id = chatMessage.conversionId;
+                user.id = chatMessage.receiverId;
                 user.name = chatMessage.conversionName;
                 user.image = chatMessage.conversionImage;
                 conversionListener.onConversionClicked(user);
             });
             binding.getRoot().setOnLongClickListener(v -> {
-                final BottomSheetDialog bottomSheetDialog=new BottomSheetDialog(((HomeFragment)conversionListener).requireContext());
-                bottomSheetDialog.setContentView(R.layout.alert_dialog);
+                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(((HomeFragment) conversionListener).requireContext());
+                bottomSheetDialog.setContentView(R.layout.bottomsheet_option_conversation);
+                View view = bottomSheetDialog.findViewById(R.id.deleteConversation);
+                assert view != null;
+                view.setOnClickListener(v1 -> {
+                    conversionListener.onClickDeleteBottomSheet(chatMessage, bottomSheetDialog);
+                });
                 bottomSheetDialog.show();
                 return true;
             });
-            if(position == mCount-1)
+            if (position == mCount - 1)
                 binding.lineBottom.setVisibility(View.INVISIBLE);
             else
                 binding.lineBottom.setVisibility(View.VISIBLE);

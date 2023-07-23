@@ -263,7 +263,7 @@ public class ChatActivity extends BaseActivity {
     }
 
     private String getReadableDateTime(Date date) {
-        return new SimpleDateFormat("dd-MMMM,hh:mm a", Locale.getDefault()).format(date);
+        return new SimpleDateFormat("HH:mm,dd MMMM", Locale.getDefault()).format(date);
     }
 
     private void addConversion(HashMap<String, Object> conversion) {
