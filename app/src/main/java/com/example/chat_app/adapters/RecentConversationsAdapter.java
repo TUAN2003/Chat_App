@@ -65,10 +65,6 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
             binding.textName.setText(chatMessage.conversionName);
             binding.textRecentMessage.setText(chatMessage.message);
             binding.textTimeStamp.setText(FunctionGlobal.dateTimeFormat(chatMessage.dateObject));
-            if(position == mCount-1)
-                binding.lineBottom.setVisibility(View.INVISIBLE);
-            else
-                binding.lineBottom.setVisibility(View.VISIBLE);
             binding.getRoot().setOnClickListener(v -> {
                 User user = new User();
                 user.id = chatMessage.conversionId;
@@ -82,6 +78,10 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
                 bottomSheetDialog.show();
                 return true;
             });
+            if(position == mCount-1)
+                binding.lineBottom.setVisibility(View.INVISIBLE);
+            else
+                binding.lineBottom.setVisibility(View.VISIBLE);
         }
     }
 

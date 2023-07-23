@@ -1,12 +1,10 @@
 package com.example.chat_app.models;
 
 import java.io.Serializable;
-import java.util.Comparator;
 
 public class User implements Serializable {
     public String id, name, image, email, token,numberPhone,password;
     public String[] listIdFriend;
-    public String[] listIdGroup;
 
     public User(){}
     public User(String id, String name, String image, String email, String token, String[] listIdFriend) {
