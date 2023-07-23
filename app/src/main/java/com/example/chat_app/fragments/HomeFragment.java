@@ -1,10 +1,13 @@
 package com.example.chat_app.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -12,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.chat_app.R;
 import com.example.chat_app.activities.ChatActivity;
 import com.example.chat_app.activities.ContainerFragmentActivity;
 import com.example.chat_app.activities.SignInActivity;
@@ -146,16 +150,26 @@ public class HomeFragment extends Fragment implements ConversionListener {
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onClickDeleteBottomSheet(ChatMessage chatMessage, BottomSheetDialog dialog) {
-        this.database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
-                .document(chatMessage.conversionId)
-                .delete()
-                .addOnCompleteListener(task -> {
-                    conversations.remove(chatMessage);
-                    conversationsAdapter.notifyDataSetChanged();
-                }).addOnFailureListener(e -> {
-                    Toast.makeText(parentActivity, "Xóa cuộc hột thoại không thành công", Toast.LENGTH_SHORT)
-                            .show();
-                });
-        dialog.dismiss();
+        dialog.cancel();
+        AlertDialog.Builder builder=new AlertDialog.Builder(parentActivity);
+        builder.setTitle("Xóa cuộc hội thoại")
+                .setMessage("Bạn có muốn chắc chắn xóa cuộc hội thoại với \""+chatMessage.conversionName+"\"")
+                .setNegativeButton("Xác nhận xóa",(dialog1, which) -> {
+                    HomeFragment.this.database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                            .document(chatMessage.conversionId)
+                            .delete()
+                            .addOnCompleteListener(task -> {
+                                conversations.remove(chatMessage);
+                                conversationsAdapter.notifyDataSetChanged();
+                            }).addOnFailureListener(e ->
+                                    Toast.makeText(parentActivity, "Xóa cuộc hột thoại không thành công", Toast.LENGTH_SHORT)
+                                    .show());
+                    dialog1.cancel();
+                })
+                .setPositiveButton("Hủy",(dialog1, which) -> dialog1.cancel());
+        AlertDialog alertDialog=builder.create();
+        alertDialog.show();
+        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.RED);
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.main_color_blue));
     }
 }

@@ -77,9 +77,7 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
                 bottomSheetDialog.setContentView(R.layout.bottomsheet_option_conversation);
                 View view = bottomSheetDialog.findViewById(R.id.deleteConversation);
                 assert view != null;
-                view.setOnClickListener(v1 -> {
-                    conversionListener.onClickDeleteBottomSheet(chatMessage, bottomSheetDialog);
-                });
+                view.setOnClickListener(v1 -> conversionListener.onClickDeleteBottomSheet(chatMessage, bottomSheetDialog));
                 bottomSheetDialog.show();
                 return true;
             });
