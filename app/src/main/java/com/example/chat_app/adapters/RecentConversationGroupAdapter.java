@@ -10,10 +10,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.chat_app.R;
 import com.example.chat_app.databinding.ItemContainerRecentConversionBinding;
+import com.example.chat_app.fragments.GroupChatFragment;
 import com.example.chat_app.listeners.ConversionGRListener;
 import com.example.chat_app.models.GroupChat;
 import com.example.chat_app.utilities.FunctionGlobal;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.List;
 
@@ -66,6 +69,15 @@ public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentC
             else
                 binding.lineBottom.setVisibility(View.VISIBLE);
             binding.getRoot().setOnClickListener(v -> conversionGRListener.onClick(groupChat));
+            binding.getRoot().setOnLongClickListener(v -> {
+                final BottomSheetDialog bottomSheetDialog=new BottomSheetDialog(((GroupChatFragment)conversionGRListener).requireContext());
+                bottomSheetDialog.setContentView(R.layout.bottomsheet_option_conversation_group);
+                View view=bottomSheetDialog.findViewById(R.id.deleteConversationGroup);
+                assert view != null;
+                view.setOnClickListener(v1 -> conversionGRListener.onClickDeleteBottomSheet(groupChat,bottomSheetDialog));
+                bottomSheetDialog.show();
+                return true;
+            });
         }
     }
 

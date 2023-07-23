@@ -1,16 +1,21 @@
 package com.example.chat_app.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.example.chat_app.R;
 import com.example.chat_app.activities.ChatGroupActivity;
 import com.example.chat_app.activities.ContainerFragmentActivity;
 import com.example.chat_app.activities.SignInActivity;
@@ -19,8 +24,10 @@ import com.example.chat_app.databinding.FragmentGroupChatBinding;
 import com.example.chat_app.listeners.ConversionGRListener;
 import com.example.chat_app.models.GroupChat;
 import com.example.chat_app.utilities.Constants;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -118,5 +125,29 @@ public class GroupChatFragment extends Fragment implements ConversionGRListener 
         Intent intent = new Intent(parentActivity.getApplicationContext(), ChatGroupActivity.class);
         intent.putExtra(Constants.KEY_COLLECTION_GROUPS, groupChats);
         startActivity(intent);
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void onClickDeleteBottomSheet(GroupChat groupChat, BottomSheetDialog dialog) {
+        dialog.cancel();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
+        builder.setTitle("Rời nhóm")
+                .setMessage("Bạn có muốn rời nhóm không \"" + groupChat.getNameGroup() + "\" ?")
+                .setNegativeButton("Rời nhóm", (dialog1, which) -> {
+                    GroupChatFragment.this.database.collection(Constants.KEY_COLLECTION_GROUPS)
+                            .document(groupChat.getIdGroup())
+                            .update(Constants.KEY_ID_MEMBERS,
+                                    FieldValue.arrayRemove(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)))
+                            .addOnSuccessListener(unused -> {
+                                conversations.remove(groupChat);
+                                conversationGroupAdapter.notifyDataSetChanged();
+                            });
+                    dialog1.cancel();
+                }).setPositiveButton("Hủy", (dialog1, which) -> dialog1.cancel());
+        AlertDialog alertDialog = builder.show();
+        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.RED);
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.main_color_blue));
+
     }
 }
