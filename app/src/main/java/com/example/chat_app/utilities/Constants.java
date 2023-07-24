@@ -33,6 +33,7 @@ public final class Constants {
     public static final String KEY_NEW_MESSAGE_OF="newMessageOf";
     public static final String KEY_ENCODE_IMAGE="enCodeImage";
     public static final String KEY_NAME_GROUP="nameGroup";
+    public static final String KEY_LAST_SENDER="lastSender";
     public static final String KEY_ID_MEMBERS="idMember";
     public static final String KEY_AVAILABILITY = "availability";
     public static final String REMOTE_MSG_AUTHORIZATION = "Authorization";

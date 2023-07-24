@@ -86,6 +86,7 @@ public class GroupChatFragment extends Fragment implements ConversionGRListener 
                 String nameGroup = documentChange.getDocument().getString(Constants.KEY_NAME_GROUP);
                 String enCodeImage = documentChange.getDocument().getString(Constants.KEY_ENCODE_IMAGE);
                 String idGroup = documentChange.getDocument().getId();
+                String lastSender=documentChange.getDocument().getString(Constants.KEY_LAST_SENDER);
                 String lastMessage = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                 Date date = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                 List<String> idMembers = (List<String>) documentChange.getDocument().get(Constants.KEY_ID_MEMBERS);
@@ -97,6 +98,7 @@ public class GroupChatFragment extends Fragment implements ConversionGRListener 
                     groupChat.setIdGroup(idGroup);
                     groupChat.setLastMessage(lastMessage);
                     groupChat.setIdMember(idMembers);
+                    groupChat.setLastSender(lastSender);
                     conversations.add(groupChat);
                 } else if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
                     for (int i = 0; i < conversations.size(); i++) {
@@ -106,6 +108,7 @@ public class GroupChatFragment extends Fragment implements ConversionGRListener 
                             conversations.get(i).setLastMessage(lastMessage);
                             conversations.get(i).setEnCodeImage(enCodeImage);
                             conversations.get(i).setIdMember(idMembers);
+                            conversations.get(i).setLastSender(lastSender);
                             break;
                         }
                     }
@@ -120,7 +123,12 @@ public class GroupChatFragment extends Fragment implements ConversionGRListener 
     };
 
     @Override
-    public void onClick(GroupChat groupChats) {
+    public void onClick(GroupChat groupChats,String documentId,String lastSender) {
+        if(!lastSender.equals(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID))){
+            database.collection(Constants.KEY_COLLECTION_GROUPS)
+                    .document(documentId)
+                    .update(Constants.KEY_LAST_SENDER,"");
+        }
         Intent intent = new Intent(parentActivity.getApplicationContext(), ChatGroupActivity.class);
         intent.putExtra(Constants.KEY_COLLECTION_GROUPS, groupChats);
         startActivity(intent);

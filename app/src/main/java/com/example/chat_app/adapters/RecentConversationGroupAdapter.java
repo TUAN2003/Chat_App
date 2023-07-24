@@ -2,6 +2,8 @@ package com.example.chat_app.adapters;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chat_app.R;
+import com.example.chat_app.activities.SignInActivity;
 import com.example.chat_app.databinding.ItemContainerRecentConversionBinding;
 import com.example.chat_app.fragments.GroupChatFragment;
 import com.example.chat_app.listeners.ConversionGRListener;
 import com.example.chat_app.models.GroupChat;
+import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.FunctionGlobal;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -64,11 +68,7 @@ public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentC
             binding.textName.setText(groupChat.getNameGroup());
             binding.textRecentMessage.setText(groupChat.getLastMessage());
             binding.textTimeStamp.setText(FunctionGlobal.dateTimeFormat(groupChat.getDate()));
-            if(position == mCount-1)
-                binding.lineBottom.setVisibility(View.INVISIBLE);
-            else
-                binding.lineBottom.setVisibility(View.VISIBLE);
-            binding.getRoot().setOnClickListener(v -> conversionGRListener.onClick(groupChat));
+            binding.getRoot().setOnClickListener(v -> conversionGRListener.onClick(groupChat,groupChat.getIdGroup(),groupChat.getLastSender()));
             binding.getRoot().setOnLongClickListener(v -> {
                 final BottomSheetDialog bottomSheetDialog=new BottomSheetDialog(((GroupChatFragment)conversionGRListener).requireContext());
                 bottomSheetDialog.setContentView(R.layout.bottomsheet_option_conversation_group);
@@ -78,6 +78,21 @@ public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentC
                 bottomSheetDialog.show();
                 return true;
             });
+            if(groupChat.getLastSender().equals(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)))
+            {
+                binding.textName.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                binding.textRecentMessage.setTextColor(((GroupChatFragment)conversionGRListener).getResources().getColor(R.color.secondary_text));
+                binding.newMessage.setVisibility(View.GONE);
+            }
+            else{
+                binding.textName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                binding.textRecentMessage.setTextColor(Color.BLACK);
+                binding.newMessage.setVisibility(View.VISIBLE);
+            }
+            if(position == mCount-1)
+                binding.lineBottom.setVisibility(View.INVISIBLE);
+            else
+                binding.lineBottom.setVisibility(View.VISIBLE);
         }
     }
 

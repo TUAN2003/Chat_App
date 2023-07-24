@@ -11,6 +11,7 @@ public class GroupChat implements Serializable {
     private String mNameGroup;
     private List<String> mIdMember;
     private String mLastMessage;
+    private String lastSender;
     private Date dateTime;
 
     public GroupChat(String enCodeImage, String mNameGroup,Date dateTime, List<String> mIdMember) {
@@ -67,5 +68,13 @@ public class GroupChat implements Serializable {
 
     public void setIdGroup(String idGroup) {
         this.idGroup = idGroup;
+    }
+
+    public String getLastSender() {
+        return lastSender;
+    }
+
+    public void setLastSender(String lastSender) {
+        this.lastSender = lastSender;
     }
 }
