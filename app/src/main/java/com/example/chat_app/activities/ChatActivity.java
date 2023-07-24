@@ -152,7 +152,7 @@ public class ChatActivity extends BaseActivity {
         message.put(Constants.KEY_TIMESTAMP, new Date());
         database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
         if (conversionId != null)
-            updateConversion(binding.inputMessage.getText().toString());
+            updateConversion(binding.inputMessage.getText().toString(),receiverUser.id);
         else {
             HashMap<String, Object> conversion = new HashMap<>();
             conversion.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
@@ -163,6 +163,7 @@ public class ChatActivity extends BaseActivity {
             conversion.put(Constants.KEY_RECEIVER_IMAGE, receiverUser.image);
             conversion.put(Constants.KEY_LAST_MESSAGE, binding.inputMessage.getText().toString());
             conversion.put(Constants.KEY_TIMESTAMP, new Date());
+            conversion.put(Constants.KEY_NEW_MESSAGE_OF,receiverUser.id);
             addConversion(conversion);
         }
         if (!isReceiverAvailable) {
@@ -272,12 +273,13 @@ public class ChatActivity extends BaseActivity {
                 .addOnSuccessListener(documentReference -> conversionId = documentReference.getId());
     }
 
-    private void updateConversion(String message) {
+    private void updateConversion(String message,String newMessageOf) {
         DocumentReference documentReference =
                 database.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document(conversionId);
         documentReference.update(
                 Constants.KEY_LAST_MESSAGE, message
-                , Constants.KEY_TIMESTAMP, new Date());
+                , Constants.KEY_TIMESTAMP, new Date()
+        ,Constants.KEY_NEW_MESSAGE_OF,newMessageOf);
     }
 
     private void checkForConversion() {

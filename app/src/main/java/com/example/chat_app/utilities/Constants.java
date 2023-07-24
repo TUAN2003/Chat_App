@@ -30,7 +30,7 @@ public final class Constants {
     public static final String KEY_SENDER_IMAGE = "senderImage";
     public static final String KEY_RECEIVER_IMAGE = "receiverImage";
     public static final String KEY_LAST_MESSAGE = "lastMessage";
-    public static final String KEY_IS_SAW_MESSAGE="isSawMessage";
+    public static final String KEY_NEW_MESSAGE_OF="newMessageOf";
     public static final String KEY_ENCODE_IMAGE="enCodeImage";
     public static final String KEY_NAME_GROUP="nameGroup";
     public static final String KEY_ID_MEMBERS="idMember";

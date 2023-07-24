@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment implements ConversionListener {
             return;
         if (value != null) {
             for (DocumentChange documentChange : value.getDocumentChanges()) {
-                String conversationId=documentChange.getDocument().getId();
+                String conversationId = documentChange.getDocument().getId();
                 String senderId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
                 String receiverId = documentChange.getDocument().getString(Constants.KEY__RECEIVER_ID);
                 if (documentChange.getType() == DocumentChange.Type.ADDED) {
@@ -103,14 +103,15 @@ public class HomeFragment extends Fragment implements ConversionListener {
                     }
                     chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                     chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
-                    chatMessage.conversionId=conversationId;
+                    chatMessage.newMessageOf = documentChange.getDocument().getString(Constants.KEY_NEW_MESSAGE_OF);
+                    chatMessage.conversionId = conversationId;
                     conversations.add(chatMessage);
                 } else if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
-                    // THIS IS BUG
                     for (int i = 0; i < conversations.size(); i++) {
                         if (conversations.get(i).conversionId.equals(conversationId)) {
                             conversations.get(i).message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                             conversations.get(i).dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                            conversations.get(i).newMessageOf = documentChange.getDocument().getString(Constants.KEY_NEW_MESSAGE_OF);
                             break;
                         }
                     }
@@ -141,7 +142,10 @@ public class HomeFragment extends Fragment implements ConversionListener {
     }
 
     @Override
-    public void onConversionClicked(User user) {
+    public void onConversionClicked(User user,String conversationId) {
+        database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                .document(conversationId)
+                .update(Constants.KEY_NEW_MESSAGE_OF,"");
         Intent intent = new Intent(parentActivity.getApplicationContext(), ChatActivity.class);
         intent.putExtra(Constants.KEY_USER, user);
         startActivity(intent);
@@ -151,10 +155,10 @@ public class HomeFragment extends Fragment implements ConversionListener {
     @Override
     public void onClickDeleteBottomSheet(ChatMessage chatMessage, BottomSheetDialog dialog) {
         dialog.cancel();
-        AlertDialog.Builder builder=new AlertDialog.Builder(parentActivity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
         builder.setTitle("Xóa cuộc hội thoại")
-                .setMessage("Bạn có muốn chắc chắn xóa cuộc hội thoại với \""+chatMessage.conversionName+"\"")
-                .setNegativeButton("Xác nhận xóa",(dialog1, which) -> {
+                .setMessage("Bạn có muốn chắc chắn xóa cuộc hội thoại với \"" + chatMessage.conversionName + "\"")
+                .setNegativeButton("Xác nhận xóa", (dialog1, which) -> {
                     HomeFragment.this.database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                             .document(chatMessage.conversionId)
                             .delete()
@@ -163,11 +167,11 @@ public class HomeFragment extends Fragment implements ConversionListener {
                                 conversationsAdapter.notifyDataSetChanged();
                             }).addOnFailureListener(e ->
                                     Toast.makeText(parentActivity, "Xóa cuộc hột thoại không thành công", Toast.LENGTH_SHORT)
-                                    .show());
+                                            .show());
                     dialog1.cancel();
                 })
-                .setPositiveButton("Hủy",(dialog1, which) -> dialog1.cancel());
-        AlertDialog alertDialog=builder.create();
+                .setPositiveButton("Hủy", (dialog1, which) -> dialog1.cancel());
+        AlertDialog alertDialog = builder.create();
         alertDialog.show();
         alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.RED);
         alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.main_color_blue));
