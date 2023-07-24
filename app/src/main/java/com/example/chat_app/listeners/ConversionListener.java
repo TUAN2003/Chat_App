@@ -5,6 +5,6 @@ import com.example.chat_app.models.User;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public interface ConversionListener {
-    void onConversionClicked(User user,String conversationId);
+    void onConversionClicked(User user,String conversationId,String newMessageOf);
     void onClickDeleteBottomSheet(ChatMessage chatMessage, BottomSheetDialog dialog);
 }

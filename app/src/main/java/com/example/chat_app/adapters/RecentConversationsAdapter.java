@@ -75,7 +75,7 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
                 user.id = chatMessage.receiverId;
                 user.name = chatMessage.conversionName;
                 user.image = chatMessage.conversionImage;
-                conversionListener.onConversionClicked(user,chatMessage.conversionId);
+                conversionListener.onConversionClicked(user,chatMessage.conversionId,chatMessage.newMessageOf);
             });
             binding.getRoot().setOnLongClickListener(v -> {
                 final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(((HomeFragment) conversionListener).requireContext());
