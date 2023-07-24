@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:layout_gravity="center_vertical"
-            android:text="Tắt thông báo cuộc trò chuyện"
+            android:text="Tắt thông báo nhóm này"
             android:fontFamily="@font/roboto_regular"
             android:textStyle="bold"
             android:layout_marginStart="15dp"/>
