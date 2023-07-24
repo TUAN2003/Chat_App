@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.chat_app.R;
 import com.example.chat_app.activities.ChatGroupActivity;
@@ -133,7 +132,7 @@ public class GroupChatFragment extends Fragment implements ConversionGRListener 
         dialog.cancel();
         final AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
         builder.setTitle("Rời nhóm")
-                .setMessage("Bạn có muốn rời nhóm không \"" + groupChat.getNameGroup() + "\" ?")
+                .setMessage("Bạn có muốn rời nhóm \"" + groupChat.getNameGroup() + "\" không?")
                 .setNegativeButton("Rời nhóm", (dialog1, which) -> {
                     GroupChatFragment.this.database.collection(Constants.KEY_COLLECTION_GROUPS)
                             .document(groupChat.getIdGroup())
