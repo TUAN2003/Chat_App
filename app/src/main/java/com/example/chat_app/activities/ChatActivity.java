@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chat_app.adapters.ChatAdapter;
 import com.example.chat_app.databinding.ActivityChatBinding;
@@ -45,7 +46,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ChatActivity extends BaseActivity {
+public class ChatActivity extends AppCompatActivity {
     private ActivityChatBinding binding;
     private User receiverUser;
     private List<ChatMessage> chatMessages;
@@ -152,7 +153,7 @@ public class ChatActivity extends BaseActivity {
         message.put(Constants.KEY_TIMESTAMP, new Date());
         database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
         if (conversionId != null)
-            updateConversion(binding.inputMessage.getText().toString(),receiverUser.id);
+            updateConversion(binding.inputMessage.getText().toString(), receiverUser.id);
         else {
             HashMap<String, Object> conversion = new HashMap<>();
             conversion.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
@@ -163,7 +164,7 @@ public class ChatActivity extends BaseActivity {
             conversion.put(Constants.KEY_RECEIVER_IMAGE, receiverUser.image);
             conversion.put(Constants.KEY_LAST_MESSAGE, binding.inputMessage.getText().toString());
             conversion.put(Constants.KEY_TIMESTAMP, new Date());
-            conversion.put(Constants.KEY_NEW_MESSAGE_OF,receiverUser.id);
+            conversion.put(Constants.KEY_NEW_MESSAGE_OF, receiverUser.id);
             addConversion(conversion);
         }
         if (!isReceiverAvailable) {
@@ -250,7 +251,7 @@ public class ChatActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length() >0)
+                if (s.length() > 0)
                     binding.layoutSend.setVisibility(View.VISIBLE);
                 else
                     binding.layoutSend.setVisibility(View.GONE);
@@ -273,7 +274,7 @@ public class ChatActivity extends BaseActivity {
                 .addOnSuccessListener(documentReference -> conversionId = documentReference.getId());
     }
 
-    private void updateConversion(String message,String newMessageOf) {
+    private void updateConversion(String message, String newMessageOf) {
         DocumentReference documentReference =
                 database.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document(conversionId);
         documentReference.update(
