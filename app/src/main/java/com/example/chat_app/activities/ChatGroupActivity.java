@@ -156,12 +156,13 @@ public class ChatGroupActivity extends AppCompatActivity {
         return new SimpleDateFormat("HH:mm dd MMMM", Locale.getDefault()).format(date);
     }
 
-    private void updateConversion(String message,String lastSender) {
+    private void updateConversion(String message,String watcheds) {
         DocumentReference documentReference =
-                database.collection(Constants.KEY_COLLECTION_GROUPS).document(groupChat.getIdGroup());
+                database.collection(Constants.KEY_COLLECTION_GROUPS)
+                        .document(groupChat.getIdGroup());
         documentReference.update(
                 Constants.KEY_LAST_MESSAGE, message
-                ,Constants.KEY_LAST_SENDER,lastSender
+                ,Constants.KEY_WATCHEDS,watcheds
                 , Constants.KEY_TIMESTAMP, new Date());
     }
 }

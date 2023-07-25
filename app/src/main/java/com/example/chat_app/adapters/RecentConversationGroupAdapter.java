@@ -68,7 +68,8 @@ public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentC
             binding.textName.setText(groupChat.getNameGroup());
             binding.textRecentMessage.setText(groupChat.getLastMessage());
             binding.textTimeStamp.setText(FunctionGlobal.dateTimeFormat(groupChat.getDate()));
-            binding.getRoot().setOnClickListener(v -> conversionGRListener.onClick(groupChat,groupChat.getIdGroup(),groupChat.getLastSender()));
+            binding.getRoot().setOnClickListener(v ->
+                    conversionGRListener.onClick(groupChat,groupChat.getIdGroup(),groupChat.getWatcheds()));
             binding.getRoot().setOnLongClickListener(v -> {
                 final BottomSheetDialog bottomSheetDialog=new BottomSheetDialog(((GroupChatFragment)conversionGRListener).requireContext());
                 bottomSheetDialog.setContentView(R.layout.bottomsheet_option_conversation_group);
@@ -78,14 +79,16 @@ public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentC
                 bottomSheetDialog.show();
                 return true;
             });
-            if(groupChat.getLastSender().equals(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)))
+            if(groupChat.getWatcheds().contains(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)))
             {
                 binding.textName.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                binding.textRecentMessage.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                 binding.textRecentMessage.setTextColor(((GroupChatFragment)conversionGRListener).getResources().getColor(R.color.secondary_text));
                 binding.newMessage.setVisibility(View.GONE);
             }
             else{
                 binding.textName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                binding.textRecentMessage.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                 binding.textRecentMessage.setTextColor(Color.BLACK);
                 binding.newMessage.setVisibility(View.VISIBLE);
             }
