@@ -24,7 +24,11 @@ public class ContainerFragmentActivity extends BaseActivity {
     private NavigationBarView bottomNavigationView;
     private ViewPager2 viewPager;
     private Toolbar toolbar;
-    public static Fragment[] fragments;
+    public static Fragment[] fragments = new Fragment[]{
+            new HomeFragment()
+            , new GroupChatFragment()
+            , new ListFriendFragment()
+            , new ChatBotFragment()};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +38,6 @@ public class ContainerFragmentActivity extends BaseActivity {
     }
 
     private void init() {
-        fragments = new Fragment[]{
-                new HomeFragment()
-                , new GroupChatFragment()
-                , new ListFriendFragment()
-                , new ChatBotFragment()};
         bindingView();
         setListeners();
     }
@@ -126,20 +125,20 @@ public class ContainerFragmentActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int result=item.getItemId();
-        if(result == R.id.itemSearch){
-            startActivity(new Intent(this,SearchActivity.class));
+        int result = item.getItemId();
+        if (result == R.id.itemSearch) {
+            startActivity(new Intent(this, SearchActivity.class));
             return true;
         } else if (result == R.id.itemAddFriend) {
-            startActivity(new Intent(this,AddFriendActivity.class));
+            startActivity(new Intent(this, AddFriendActivity.class));
             return true;
         }
         return false;
     }
 
-    private void displayMenuFragmentChange(int index){
+    private void displayMenuFragmentChange(int index) {
         toolbar.getMenu().clear();
-        if(index == 2){
+        if (index == 2) {
             toolbar.inflateMenu(R.menu.menu_fragment_list_friend);
         } else if (index == 0) {
             toolbar.inflateMenu(R.menu.menu_option_user);
