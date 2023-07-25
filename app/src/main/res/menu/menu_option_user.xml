@@ -5,11 +5,17 @@
     <item
         android:id="@+id/itemSearch"
         android:icon="@drawable/outline_search_24"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:title="@string/text_search" />
     <item
         android:id="@+id/itemAdditional"
         android:icon="@drawable/round_add_24"
+        app:showAsAction="ifRoom"
+        android:title="@string/text_additional">
+    </item>
+    <item
+        android:id="@+id/itemAddFriend"
+        android:icon="@drawable/round_person_add_alt_1_24"
         app:showAsAction="ifRoom"
         android:title="@string/text_additional">
     </item>
