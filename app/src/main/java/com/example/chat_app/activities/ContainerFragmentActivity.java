@@ -66,22 +66,18 @@ public class ContainerFragmentActivity extends BaseActivity {
                     case 0:
                         bottomNavigationView.getMenu().findItem(R.id.itemMessage).setChecked(true);
                         ContainerFragmentActivity.this.toolbar.setTitle(R.string.text_title_home);
-                        displayMenuFragmentChange(0);
                         break;
                     case 1:
                         bottomNavigationView.getMenu().findItem(R.id.itemMessageGroup).setChecked(true);
                         ContainerFragmentActivity.this.toolbar.setTitle(R.string.label_group_chat);
-                        displayMenuFragmentChange(1);
                         break;
                     case 2:
                         bottomNavigationView.getMenu().findItem(R.id.itemFriends).setChecked(true);
                         ContainerFragmentActivity.this.toolbar.setTitle(R.string.label_friends);
-                        displayMenuFragmentChange(2);
                         break;
                     case 3:
                         bottomNavigationView.getMenu().findItem(R.id.itemChatBot).setChecked(true);
                         ContainerFragmentActivity.this.toolbar.setTitle(R.string.chat_ai);
-                        displayMenuFragmentChange(3);
                         break;
                 }
             }
@@ -98,19 +94,15 @@ public class ContainerFragmentActivity extends BaseActivity {
             if (idSelectedItem == idItemGroupChat) {
                 viewPager.setCurrentItem(1, false);
                 ContainerFragmentActivity.this.toolbar.setTitle(R.string.label_group_chat);
-                displayMenuFragmentChange(1);
             } else if (idSelectedItem == idItemFriends) {
                 viewPager.setCurrentItem(2, false);
                 ContainerFragmentActivity.this.toolbar.setTitle(R.string.label_friends);
-                displayMenuFragmentChange(2);
             } else if (idSelectedItem == idItemChatBot) {
                 viewPager.setCurrentItem(3, false);
                 ContainerFragmentActivity.this.toolbar.setTitle(R.string.chat_ai);
-                displayMenuFragmentChange(3);
             } else {
                 viewPager.setCurrentItem(0, false);
                 ContainerFragmentActivity.this.toolbar.setTitle(R.string.text_title_home);
-                displayMenuFragmentChange(0);
             }
             return true;
         }
@@ -119,7 +111,6 @@ public class ContainerFragmentActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_option_user, menu);
-        toolbar.getMenu().findItem(R.id.itemAdditional).setVisible(false);
         return true;
     }
 
@@ -134,17 +125,5 @@ public class ContainerFragmentActivity extends BaseActivity {
             return true;
         }
         return false;
-    }
-
-    private void displayMenuFragmentChange(int index) {
-        toolbar.getMenu().clear();
-        if (index == 2) {
-            toolbar.inflateMenu(R.menu.menu_fragment_list_friend);
-        } else if (index == 0) {
-            toolbar.inflateMenu(R.menu.menu_option_user);
-            toolbar.getMenu().findItem(R.id.itemAdditional).setVisible(false);
-        } else {
-            toolbar.inflateMenu(R.menu.menu_option_user);
-        }
     }
 }
