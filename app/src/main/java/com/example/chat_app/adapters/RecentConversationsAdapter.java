@@ -89,11 +89,13 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
             if(chatMessage.newMessageOf.equals(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)))
             {
                 binding.textName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                binding.textRecentMessage.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                 binding.textRecentMessage.setTextColor(Color.BLACK);
                 binding.newMessage.setVisibility(View.VISIBLE);
             }
             else{
                 binding.textName.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                binding.textRecentMessage.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                 binding.textRecentMessage.setTextColor(((HomeFragment)conversionListener).getResources().getColor(R.color.secondary_text));
                 binding.newMessage.setVisibility(View.GONE);
             }
