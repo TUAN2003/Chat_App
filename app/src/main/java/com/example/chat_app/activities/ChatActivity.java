@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chat_app.adapters.ChatAdapter;
 import com.example.chat_app.databinding.ActivityChatBinding;
@@ -46,7 +45,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends BaseActivity {
     private ActivityChatBinding binding;
     private User receiverUser;
     private List<ChatMessage> chatMessages;
@@ -277,10 +276,12 @@ public class ChatActivity extends AppCompatActivity {
     private void updateConversion(String message, String newMessageOf) {
         DocumentReference documentReference =
                 database.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document(conversionId);
-        documentReference.update(
-                Constants.KEY_LAST_MESSAGE, message
-                , Constants.KEY_TIMESTAMP, new Date()
-        ,Constants.KEY_NEW_MESSAGE_OF,newMessageOf);
+        if(!isReceiverAvailable){
+            documentReference.update(
+                    Constants.KEY_LAST_MESSAGE, message
+                    , Constants.KEY_TIMESTAMP, new Date()
+                    ,Constants.KEY_NEW_MESSAGE_OF,newMessageOf);
+        }
     }
 
     private void checkForConversion() {
