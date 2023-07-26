@@ -1,7 +1,5 @@
 package com.example.chat_app.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class ChatGroupActivity extends AppCompatActivity {
+public class ChatGroupActivity extends BaseActivity {
 
     private ActivityChatGroupBinding binding;
     private List<ChatMessage> chatMessages;
