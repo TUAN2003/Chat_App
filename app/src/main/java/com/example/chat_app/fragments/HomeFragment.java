@@ -146,7 +146,8 @@ public class HomeFragment extends Fragment implements ConversionListener {
         if(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID).equals(newMessageOf)){
             database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                     .document(conversationId)
-                    .update(Constants.KEY_NEW_MESSAGE_OF,"");
+                    .update(Constants.KEY_NEW_MESSAGE_OF,""
+                    ,SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID),true);
         }
         Intent intent = new Intent(parentActivity.getApplicationContext(), ChatActivity.class);
         intent.putExtra(Constants.KEY_USER, user);

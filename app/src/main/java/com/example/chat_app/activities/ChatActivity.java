@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chat_app.adapters.ChatAdapter;
 import com.example.chat_app.databinding.ActivityChatBinding;
@@ -39,13 +40,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ChatActivity extends BaseActivity {
+public class ChatActivity extends AppCompatActivity {
     private ActivityChatBinding binding;
     private User receiverUser;
     private List<Message> chatMessages;
@@ -110,23 +110,13 @@ public class ChatActivity extends BaseActivity {
 
     private void listenAvailabilityOfReceiver() {
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
-                .document(receiverUser.id)
+                .document(conversionId)
                 .addSnapshotListener(ChatActivity.this, (value, error) -> {
                     if (error != null)
                         return;
                     if (value != null) {
-                        if (value.getLong(Constants.KEY_AVAILABILITY) != null) {
-                            int availability = Objects.requireNonNull(value.getLong(Constants.KEY_AVAILABILITY)).intValue();
-                            isReceiverAvailable = (availability == 1)
-                            && conversionId != null
-                            && conversionId.equals(value.getString(conversionId));
-                        }
-                        receiverUser.token = value.getString(Constants.KEY_FCM_TOKEN);
-                        if (receiverUser.image == null) {
-                            receiverUser.image = value.getString(Constants.KEY_IMAGE);
-                            chatAdapter.setReceiverProfileImage(getBitmapFromEncodedString(receiverUser.image));
-                            chatAdapter.notifyItemRangeChanged(0, chatMessages.size());
-                        }
+                        Boolean res = value.getBoolean(receiverUser.id);
+                        isReceiverAvailable = res!= null && res;
                     }
                     if (isReceiverAvailable) {
                         binding.textAvailability.setVisibility(View.VISIBLE);
@@ -321,6 +311,17 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+            database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                    .document(conversionId)
+                    .update(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID),true);
         listenAvailabilityOfReceiver();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                .document(conversionId)
+                .update(preferenceManager.getString(Constants.KEY_USER_ID),null);
     }
 }
