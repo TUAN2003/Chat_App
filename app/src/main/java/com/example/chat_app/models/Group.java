@@ -5,22 +5,16 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class GroupChat implements Serializable {
+public class Group implements Serializable {
     private String idGroup;
     private String enCodeImage;
     private String mNameGroup;
     private List<String> mIdMember;
     private String mLastMessage;
-    private String watcheds;
+    private List<String> watcheds;
     private Date dateTime;
 
-    public GroupChat(String enCodeImage, String mNameGroup,Date dateTime, List<String> mIdMember) {
-        this.enCodeImage = enCodeImage;
-        this.mNameGroup = mNameGroup;
-        this.mIdMember = mIdMember;
-        this.dateTime=dateTime;
-    }
-    public GroupChat(){}
+    public Group(){}
 
     public String getEnCodeImage() {
         return enCodeImage;
@@ -70,11 +64,11 @@ public class GroupChat implements Serializable {
         this.idGroup = idGroup;
     }
 
-    public String getWatcheds() {
+    public List<String> getWatcheds() {
         return watcheds;
     }
 
-    public void setWatcheds(String watcheds) {
+    public void setWatcheds(List<String> watcheds) {
         this.watcheds = watcheds;
     }
 }

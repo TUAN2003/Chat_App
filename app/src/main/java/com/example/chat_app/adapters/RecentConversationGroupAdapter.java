@@ -17,7 +17,7 @@ import com.example.chat_app.activities.SignInActivity;
 import com.example.chat_app.databinding.ItemContainerRecentConversionBinding;
 import com.example.chat_app.fragments.GroupChatFragment;
 import com.example.chat_app.listeners.ConversionGRListener;
-import com.example.chat_app.models.GroupChat;
+import com.example.chat_app.models.Group;
 import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.FunctionGlobal;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -25,11 +25,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import java.util.List;
 
 public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentConversationGroupAdapter.ConversionGroupViewHolder> {
-    private final List<GroupChat> groups;
+    private final List<Group> groups;
     private final ConversionGRListener conversionGRListener;
     private int mCount;
 
-    public RecentConversationGroupAdapter(List<GroupChat> groups, ConversionGRListener conversionGRListener) {
+    public RecentConversationGroupAdapter(List<Group> groups, ConversionGRListener conversionGRListener) {
         this.groups = groups;
         this.conversionGRListener = conversionGRListener;
         this.mCount=groups.size();
@@ -63,7 +63,7 @@ public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentC
             binding = itemContainerRecentConversationBinding;
         }
 
-        void setData(GroupChat groupChat,int position) {
+        void setData(Group groupChat, int position) {
             binding.imageProfile.setImageBitmap(getConversionImage(groupChat.getEnCodeImage()));
             binding.textName.setText(groupChat.getNameGroup());
             binding.textRecentMessage.setText(groupChat.getLastMessage());

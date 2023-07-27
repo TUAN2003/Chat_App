@@ -9,20 +9,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chat_app.databinding.ItemContainerReceivedMessageBinding;
 import com.example.chat_app.databinding.ItemContainerSentMessageBinding;
-import com.example.chat_app.models.ChatMessage;
+import com.example.chat_app.models.Message;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class ChatGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private final List<ChatMessage> chatMessages;
+    private final List<Message> chatMessages;
     private final HashMap<String,Bitmap> users;
     private final String senderId;
     public static final int VIEW_TYPE_SENT = 1;
     public static final int VIEW_TYPE_RECEIVED = 2;
 
 
-    public ChatGroupAdapter(List<ChatMessage> chatMessages, HashMap<String,Bitmap> users, String senderId) {
+    public ChatGroupAdapter(List<Message> chatMessages, HashMap<String,Bitmap> users, String senderId) {
         this.chatMessages = chatMessages;
         this.users=users;
         this.senderId = senderId;
@@ -71,7 +71,7 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             binding = itemContainerSentMessageBinding;
         }
 
-        void setData(ChatMessage chatMessage) {
+        void setData(Message chatMessage) {
             binding.textMessage.setText(chatMessage.message);
             binding.textDateTime.setText(chatMessage.dateTime);
         }
@@ -85,7 +85,7 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             binding = item;
         }
 
-        void setData(ChatMessage chatMessage, Bitmap receiverProfileImage) {
+        void setData(Message chatMessage, Bitmap receiverProfileImage) {
             binding.textMessage.setText(chatMessage.message);
             binding.textDateTime.setText(chatMessage.dateTime);
             if (receiverProfileImage != null) {

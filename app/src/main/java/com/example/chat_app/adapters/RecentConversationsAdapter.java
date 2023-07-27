@@ -17,7 +17,7 @@ import com.example.chat_app.activities.SignInActivity;
 import com.example.chat_app.databinding.ItemContainerRecentConversionBinding;
 import com.example.chat_app.fragments.HomeFragment;
 import com.example.chat_app.listeners.ConversionListener;
-import com.example.chat_app.models.ChatMessage;
+import com.example.chat_app.models.Conversation;
 import com.example.chat_app.models.User;
 import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.FunctionGlobal;
@@ -26,14 +26,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import java.util.List;
 
 public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConversationsAdapter.ConversionViewHolder> {
-    private final List<ChatMessage> chatMessages;
+    private final List<Conversation> conversations;
     private final ConversionListener conversionListener;
     private int mCount;
 
-    public RecentConversationsAdapter(List<ChatMessage> chatMessages, ConversionListener conversionListener) {
-        this.chatMessages = chatMessages;
+    public RecentConversationsAdapter(List<Conversation> conversations, ConversionListener conversionListener) {
+        this.conversations = conversations;
         this.conversionListener = conversionListener;
-        this.mCount = chatMessages.size();
+        this.mCount = conversations.size();
     }
 
     @NonNull
@@ -52,7 +52,7 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
 
     @Override
     public int getItemCount() {
-        mCount = chatMessages.size();
+        mCount = conversations.size();
         return mCount;
     }
 
@@ -65,28 +65,28 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
         }
 
         void setData(int position) {
-            ChatMessage chatMessage=chatMessages.get(position);
-            binding.imageProfile.setImageBitmap(getConversionImage(chatMessage.conversionImage));
-            binding.textName.setText(chatMessage.conversionName);
-            binding.textRecentMessage.setText(chatMessage.message);
-            binding.textTimeStamp.setText(FunctionGlobal.dateTimeFormat(chatMessage.dateObject));
+            Conversation conversation=conversations.get(position);
+            binding.imageProfile.setImageBitmap(getConversionImage(conversation.receiverImage));
+            binding.textName.setText(conversation.receiverName);
+            binding.textRecentMessage.setText(conversation.lastMessage);
+            binding.textTimeStamp.setText(FunctionGlobal.dateTimeFormat(conversation.timestamp));
             binding.getRoot().setOnClickListener(v -> {
                 User user = new User();
-                user.id = chatMessage.receiverId;
-                user.name = chatMessage.conversionName;
-                user.image = chatMessage.conversionImage;
-                conversionListener.onConversionClicked(user,chatMessage.conversionId,chatMessage.newMessageOf);
+                user.id = conversation.receiverId;
+                user.name = conversation.receiverName;
+                user.image = conversation.receiverImage;
+                conversionListener.onConversionClicked(user,conversation.conversationId,conversation.newMessageOf);
             });
             binding.getRoot().setOnLongClickListener(v -> {
                 final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(((HomeFragment) conversionListener).requireContext());
                 bottomSheetDialog.setContentView(R.layout.bottomsheet_option_conversation);
                 View view = bottomSheetDialog.findViewById(R.id.deleteConversation);
                 assert view != null;
-                view.setOnClickListener(v1 -> conversionListener.onClickDeleteBottomSheet(chatMessage, bottomSheetDialog));
+                view.setOnClickListener(v1 -> conversionListener.onClickDeleteBottomSheet(conversation, bottomSheetDialog));
                 bottomSheetDialog.show();
                 return true;
             });
-            if(chatMessage.newMessageOf.equals(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)))
+            if(conversation.newMessageOf.equals(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)))
             {
                 binding.textName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                 binding.textRecentMessage.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));

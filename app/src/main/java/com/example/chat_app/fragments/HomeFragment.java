@@ -22,7 +22,7 @@ import com.example.chat_app.activities.SignInActivity;
 import com.example.chat_app.adapters.RecentConversationsAdapter;
 import com.example.chat_app.databinding.FragmentHomeBinding;
 import com.example.chat_app.listeners.ConversionListener;
-import com.example.chat_app.models.ChatMessage;
+import com.example.chat_app.models.Conversation;
 import com.example.chat_app.models.User;
 import com.example.chat_app.utilities.Constants;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -41,7 +41,7 @@ public class HomeFragment extends Fragment implements ConversionListener {
 
     private FragmentHomeBinding binding;
     private ContainerFragmentActivity parentActivity;
-    private List<ChatMessage> conversations;
+    private List<Conversation> conversations;
     private RecentConversationsAdapter conversationsAdapter;
     private FirebaseFirestore database;
 
@@ -91,33 +91,33 @@ public class HomeFragment extends Fragment implements ConversionListener {
                 String senderId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
                 String receiverId = documentChange.getDocument().getString(Constants.KEY__RECEIVER_ID);
                 if (documentChange.getType() == DocumentChange.Type.ADDED) {
-                    ChatMessage chatMessage = new ChatMessage();
+                    Conversation conversation = new Conversation();
                     if (SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID).equals(senderId)) {
-                        chatMessage.conversionImage = documentChange.getDocument().getString(Constants.KEY_RECEIVER_IMAGE);
-                        chatMessage.conversionName = documentChange.getDocument().getString(Constants.KEY_RECEIVER_NAME);
-                        chatMessage.receiverId = receiverId;
+                        conversation.receiverImage = documentChange.getDocument().getString(Constants.KEY_RECEIVER_IMAGE);
+                        conversation.receiverName = documentChange.getDocument().getString(Constants.KEY_RECEIVER_NAME);
+                        conversation.receiverId = receiverId;
                     } else {
-                        chatMessage.conversionImage = documentChange.getDocument().getString(Constants.KEY_SENDER_IMAGE);
-                        chatMessage.conversionName = documentChange.getDocument().getString(Constants.KEY_SENDER_NAME);
-                        chatMessage.receiverId = senderId;
+                        conversation.receiverImage = documentChange.getDocument().getString(Constants.KEY_SENDER_IMAGE);
+                        conversation.receiverName = documentChange.getDocument().getString(Constants.KEY_SENDER_NAME);
+                        conversation.receiverId = senderId;
                     }
-                    chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
-                    chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
-                    chatMessage.newMessageOf = documentChange.getDocument().getString(Constants.KEY_NEW_MESSAGE_OF);
-                    chatMessage.conversionId = conversationId;
-                    conversations.add(chatMessage);
+                    conversation.lastMessage = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
+                    conversation.timestamp = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                    conversation.newMessageOf = documentChange.getDocument().getString(Constants.KEY_NEW_MESSAGE_OF);
+                    conversation.conversationId = conversationId;
+                    conversations.add(conversation);
                 } else if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
                     for (int i = 0; i < conversations.size(); i++) {
-                        if (conversations.get(i).conversionId.equals(conversationId)) {
-                            conversations.get(i).message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
-                            conversations.get(i).dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                        if (conversations.get(i).conversationId.equals(conversationId)) {
+                            conversations.get(i).lastMessage = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
+                            conversations.get(i).timestamp = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                             conversations.get(i).newMessageOf = documentChange.getDocument().getString(Constants.KEY_NEW_MESSAGE_OF);
                             break;
                         }
                     }
                 }
             }
-            Collections.sort(conversations, (o1, o2) -> o2.dateObject.compareTo(o1.dateObject));
+            Collections.sort(conversations, (o1, o2) -> o2.timestamp.compareTo(o1.timestamp));
             conversationsAdapter.notifyDataSetChanged();
             binding.conversationRecyclerView.scrollToPosition(0);
             binding.conversationRecyclerView.setVisibility(View.VISIBLE);
@@ -150,22 +150,23 @@ public class HomeFragment extends Fragment implements ConversionListener {
         }
         Intent intent = new Intent(parentActivity.getApplicationContext(), ChatActivity.class);
         intent.putExtra(Constants.KEY_USER, user);
+        intent.putExtra(Constants.KEY_CONVERSATION_ID,conversationId);
         startActivity(intent);
     }
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void onClickDeleteBottomSheet(ChatMessage chatMessage, BottomSheetDialog dialog) {
+    public void onClickDeleteBottomSheet(Conversation conversation, BottomSheetDialog dialog) {
         dialog.cancel();
         AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
         builder.setTitle("Xóa cuộc hội thoại")
-                .setMessage("Bạn có muốn chắc chắn xóa cuộc hội thoại với \"" + chatMessage.conversionName + "\"")
+                .setMessage("Bạn có muốn chắc chắn xóa cuộc hội thoại với \"" + conversation.receiverName + "\"")
                 .setNegativeButton("Xác nhận xóa", (dialog1, which) -> {
                     HomeFragment.this.database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
-                            .document(chatMessage.conversionId)
+                            .document(conversation.conversationId)
                             .delete()
                             .addOnCompleteListener(task -> {
-                                conversations.remove(chatMessage);
+                                conversations.remove(conversation);
                                 conversationsAdapter.notifyDataSetChanged();
                             }).addOnFailureListener(e ->
                                     Toast.makeText(parentActivity, "Xóa cuộc hột thoại không thành công", Toast.LENGTH_SHORT)

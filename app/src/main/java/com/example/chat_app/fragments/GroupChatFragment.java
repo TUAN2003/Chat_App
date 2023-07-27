@@ -21,7 +21,7 @@ import com.example.chat_app.activities.SignInActivity;
 import com.example.chat_app.adapters.RecentConversationGroupAdapter;
 import com.example.chat_app.databinding.FragmentGroupChatBinding;
 import com.example.chat_app.listeners.ConversionGRListener;
-import com.example.chat_app.models.GroupChat;
+import com.example.chat_app.models.Group;
 import com.example.chat_app.utilities.Constants;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.firestore.DocumentChange;
@@ -38,12 +38,11 @@ import java.util.List;
 public class GroupChatFragment extends Fragment implements ConversionGRListener {
     private FragmentGroupChatBinding binding;
     private ContainerFragmentActivity parentActivity;
-    private List<GroupChat> conversations;
+    private List<Group> conversations;
     private RecentConversationGroupAdapter conversationGroupAdapter;
     private FirebaseFirestore database;
 
     public GroupChatFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -86,12 +85,12 @@ public class GroupChatFragment extends Fragment implements ConversionGRListener 
                 String nameGroup = documentChange.getDocument().getString(Constants.KEY_NAME_GROUP);
                 String enCodeImage = documentChange.getDocument().getString(Constants.KEY_ENCODE_IMAGE);
                 String idGroup = documentChange.getDocument().getId();
-                String watcheds = documentChange.getDocument().getString(Constants.KEY_WATCHEDS);
+                List<String> watcheds = (List<String>) documentChange.getDocument().get(Constants.KEY_WATCHEDS);
                 String lastMessage = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                 Date date = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                 List<String> idMembers = (List<String>) documentChange.getDocument().get(Constants.KEY_ID_MEMBERS);
                 if (documentChange.getType() == DocumentChange.Type.ADDED) {
-                    GroupChat groupChat = new GroupChat();
+                    Group groupChat = new Group();
                     groupChat.setNameGroup(nameGroup);
                     groupChat.setEnCodeImage(enCodeImage);
                     groupChat.setDate(date);
@@ -123,11 +122,11 @@ public class GroupChatFragment extends Fragment implements ConversionGRListener 
     };
 
     @Override
-    public void onClick(GroupChat groupChats, String documentId, String watcheds) {
+    public void onClick(Group groupChats, String documentId, List<String> watcheds) {
         if (!watcheds.contains(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID))) {
             database.collection(Constants.KEY_COLLECTION_GROUPS)
                     .document(documentId)
-                    .update(Constants.KEY_WATCHEDS, watcheds + "," + SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID));
+                    .update(Constants.KEY_WATCHEDS, FieldValue.arrayUnion(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)));
         }
         Intent intent = new Intent(parentActivity.getApplicationContext(), ChatGroupActivity.class);
         intent.putExtra(Constants.KEY_COLLECTION_GROUPS, groupChats);
@@ -136,7 +135,7 @@ public class GroupChatFragment extends Fragment implements ConversionGRListener 
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void onClickDeleteBottomSheet(GroupChat groupChat, BottomSheetDialog dialog) {
+    public void onClickDeleteBottomSheet(Group groupChat, BottomSheetDialog dialog) {
         dialog.cancel();
         final AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
         builder.setTitle("Rời nhóm")

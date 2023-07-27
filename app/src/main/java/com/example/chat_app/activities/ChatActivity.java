@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 
 import com.example.chat_app.adapters.ChatAdapter;
 import com.example.chat_app.databinding.ActivityChatBinding;
-import com.example.chat_app.models.ChatMessage;
+import com.example.chat_app.models.Message;
 import com.example.chat_app.models.User;
 import com.example.chat_app.network.ApiClient;
 import com.example.chat_app.network.ApiService;
@@ -48,7 +48,7 @@ import retrofit2.Response;
 public class ChatActivity extends BaseActivity {
     private ActivityChatBinding binding;
     private User receiverUser;
-    private List<ChatMessage> chatMessages;
+    private List<Message> chatMessages;
     private ChatAdapter chatAdapter;
     private PreferenceManager preferenceManager;
     private FirebaseFirestore database;
@@ -63,7 +63,7 @@ public class ChatActivity extends BaseActivity {
             int count = chatMessages.size();
             for (DocumentChange documentChange : value.getDocumentChanges()) {
                 if (documentChange.getType() == DocumentChange.Type.ADDED) {
-                    ChatMessage chatMessage = new ChatMessage();
+                    Message chatMessage = new Message();
                     chatMessage.senderId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
                     chatMessage.receiverId = documentChange.getDocument().getString(Constants.KEY__RECEIVER_ID);
                     chatMessage.message = documentChange.getDocument().getString(Constants.KEY_MESSAGE);
@@ -109,7 +109,7 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void listenAvailabilityOfReceiver() {
-        database.collection(Constants.KEY_COLLECTION_USERS)
+        database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                 .document(receiverUser.id)
                 .addSnapshotListener(ChatActivity.this, (value, error) -> {
                     if (error != null)
@@ -117,7 +117,9 @@ public class ChatActivity extends BaseActivity {
                     if (value != null) {
                         if (value.getLong(Constants.KEY_AVAILABILITY) != null) {
                             int availability = Objects.requireNonNull(value.getLong(Constants.KEY_AVAILABILITY)).intValue();
-                            isReceiverAvailable = (availability == 1);
+                            isReceiverAvailable = (availability == 1)
+                            && conversionId != null
+                            && conversionId.equals(value.getString(conversionId));
                         }
                         receiverUser.token = value.getString(Constants.KEY_FCM_TOKEN);
                         if (receiverUser.image == null) {
@@ -186,7 +188,7 @@ public class ChatActivity extends BaseActivity {
                 showToast(exception.getMessage());
             }
         }
-        binding.inputMessage.setText(null);
+        binding.inputMessage.setText("");
     }
 
     private void showToast(String message) {
@@ -237,6 +239,7 @@ public class ChatActivity extends BaseActivity {
     private void loadReceiverDetails() {
         receiverUser = (User) getIntent().getSerializableExtra(Constants.KEY_USER);
         binding.textName.setText(receiverUser.name);
+        conversionId = getIntent().getStringExtra(Constants.KEY_CONVERSATION_ID);
     }
 
     private void setListener() {
@@ -247,7 +250,6 @@ public class ChatActivity extends BaseActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0)
@@ -255,7 +257,6 @@ public class ChatActivity extends BaseActivity {
                 else
                     binding.layoutSend.setVisibility(View.GONE);
             }
-
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -279,8 +280,13 @@ public class ChatActivity extends BaseActivity {
         if(!isReceiverAvailable){
             documentReference.update(
                     Constants.KEY_LAST_MESSAGE, message
-                    , Constants.KEY_TIMESTAMP, new Date()
-                    ,Constants.KEY_NEW_MESSAGE_OF,newMessageOf);
+                    ,Constants.KEY_TIMESTAMP, new Date()
+                    ,Constants.KEY_NEW_MESSAGE_OF, newMessageOf);
+        }else{
+            documentReference.update(
+                    Constants.KEY_LAST_MESSAGE, message
+                    ,Constants.KEY_TIMESTAMP, new Date()
+                    ,Constants.KEY_NEW_MESSAGE_OF, "");
         }
     }
 

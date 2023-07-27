@@ -7,22 +7,4 @@ public class User implements Serializable {
     public String[] listIdFriend;
 
     public User(){}
-    public User(String id, String name, String image, String email, String token, String[] listIdFriend) {
-        this.id = id;
-        this.name = name;
-        this.image = image;
-        this.email = email;
-        this.token = token;
-        this.listIdFriend = listIdFriend;
-    }
-    public User(String id, String name, String image, String email, String token,String numberPhone, String[] listIdFriend) {
-        this.id = id;
-        this.name = name;
-        this.image = image;
-        this.email = email;
-        this.token = token;
-        this.listIdFriend = listIdFriend;
-        this.numberPhone=numberPhone;
-    }
-
 }

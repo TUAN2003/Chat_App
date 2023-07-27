@@ -29,9 +29,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Objects;
 
-
 public class SignUpActivity extends AppCompatActivity {
-
     private ActivitySignUpBinding binding;
     private String encodedImageDefault;
     private String encodedImage;

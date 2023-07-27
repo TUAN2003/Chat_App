@@ -11,8 +11,8 @@ import android.view.View;
 
 import com.example.chat_app.adapters.ChatGroupAdapter;
 import com.example.chat_app.databinding.ActivityChatGroupBinding;
-import com.example.chat_app.models.ChatMessage;
-import com.example.chat_app.models.GroupChat;
+import com.example.chat_app.models.Message;
+import com.example.chat_app.models.Group;
 import com.example.chat_app.utilities.Constants;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -28,16 +28,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class ChatGroupActivity extends BaseActivity {
 
     private ActivityChatGroupBinding binding;
-    private List<ChatMessage> chatMessages;
-    private HashMap<String,Bitmap> usersImage;
+    private List<Message> chatMessages;
+    private HashMap<String, Bitmap> usersImage;
     private ChatGroupAdapter chatGroupAdapter;
     private FirebaseFirestore database;
-    private GroupChat groupChat;
-
+    private Group groupChat;
+    private boolean isOnline = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +60,7 @@ public class ChatGroupActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length() == 0)
+                if (s.length() == 0)
                     binding.layoutSend.setVisibility(View.GONE);
                 else
                     binding.layoutSend.setVisibility(View.VISIBLE);
@@ -73,19 +74,23 @@ public class ChatGroupActivity extends BaseActivity {
     }
 
     private void sendMessage() {
+        String inputMessage = binding.inputMessage.getText().toString().trim();
         HashMap<String, Object> message = new HashMap<>();
         message.put(Constants.KEY_SENDER_ID, SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID));
         message.put(Constants.KEY_GROUP_ID, groupChat.getIdGroup());
-        message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
+        message.put(Constants.KEY_MESSAGE, inputMessage);
         message.put(Constants.KEY_TIMESTAMP, new Date());
-        database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
-        updateConversion(binding.inputMessage.getText().toString().trim()
-                ,SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID));
+        database.collection(Constants.KEY_COLLECTION_CHAT).add(message)
+                .addOnSuccessListener(documentReference -> {
+                    List<String> l = new ArrayList<>();
+                    l.add(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID));
+                    updateConversion(inputMessage,l);
+                });
         binding.inputMessage.setText("");
     }
 
     private void loadReceiverDetails() {
-        groupChat = (GroupChat) getIntent().getSerializableExtra(Constants.KEY_COLLECTION_GROUPS);
+        groupChat = (Group) getIntent().getSerializableExtra(Constants.KEY_COLLECTION_GROUPS);
         binding.textName.setText(groupChat.getNameGroup());
     }
 
@@ -93,12 +98,12 @@ public class ChatGroupActivity extends BaseActivity {
         binding.progressBar.setVisibility(View.VISIBLE);
         database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USERS)
-                .whereIn(Constants.KEY_USER_ID,groupChat.getIdMember())
+                .whereIn(Constants.KEY_USER_ID, groupChat.getIdMember())
                 .get()
                 .addOnCompleteListener(task -> {
                     usersImage = new HashMap<>();
-                    for(DocumentSnapshot query:task.getResult().getDocuments())
-                        usersImage.put(query.getId(),getBitmapFromEncodedString(query.getString(Constants.KEY_IMAGE)));
+                    for (DocumentSnapshot query : task.getResult().getDocuments())
+                        usersImage.put(query.getId(), getBitmapFromEncodedString(query.getString(Constants.KEY_IMAGE)));
                     chatMessages = new ArrayList<>();
                     chatGroupAdapter = new ChatGroupAdapter(chatMessages, usersImage, SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID));
                     binding.chatRecyclerView.setAdapter(chatGroupAdapter);
@@ -129,9 +134,8 @@ public class ChatGroupActivity extends BaseActivity {
             int count = chatMessages.size();
             for (DocumentChange documentChange : value.getDocumentChanges()) {
                 if (documentChange.getType() == DocumentChange.Type.ADDED) {
-                    ChatMessage chatMessage = new ChatMessage();
+                    Message chatMessage = new Message();
                     chatMessage.senderId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
-                    chatMessage.groupId = documentChange.getDocument().getString(Constants.KEY_GROUP_ID);
                     chatMessage.message = documentChange.getDocument().getString(Constants.KEY_MESSAGE);
                     chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                     chatMessage.dateTime = getReadableDateTime(chatMessage.dateObject);
@@ -154,13 +158,30 @@ public class ChatGroupActivity extends BaseActivity {
         return new SimpleDateFormat("HH:mm dd MMMM", Locale.getDefault()).format(date);
     }
 
-    private void updateConversion(String message,String watcheds) {
+    private void updateConversion(String message, List<String> watcheds) {
         DocumentReference documentReference =
                 database.collection(Constants.KEY_COLLECTION_GROUPS)
                         .document(groupChat.getIdGroup());
         documentReference.update(
                 Constants.KEY_LAST_MESSAGE, message
-                ,Constants.KEY_WATCHEDS,watcheds
+                , Constants.KEY_WATCHEDS, watcheds
                 , Constants.KEY_TIMESTAMP, new Date());
+    }
+
+    private void listenerUserOnline() {
+        database.collection(Constants.KEY_COLLECTION_USERS)
+                .document(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID))
+                .addSnapshotListener(this, (value, error) -> {
+                    if (error != null)
+                        return;
+                    if (value != null)
+                        isOnline = Objects.requireNonNull(value.getLong(Constants.KEY_AVAILABILITY)).intValue() == 1;
+                });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        listenerUserOnline();
     }
 }
