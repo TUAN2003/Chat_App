@@ -16,7 +16,7 @@ import com.example.chat_app.R;
 import com.example.chat_app.activities.SignInActivity;
 import com.example.chat_app.databinding.ItemContainerRecentConversionBinding;
 import com.example.chat_app.fragments.GroupChatFragment;
-import com.example.chat_app.listeners.ConversionGRListener;
+import com.example.chat_app.listeners.ConversationGRListener;
 import com.example.chat_app.models.Group;
 import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.FunctionGlobal;
@@ -26,12 +26,12 @@ import java.util.List;
 
 public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentConversationGroupAdapter.ConversionGroupViewHolder> {
     private final List<Group> groups;
-    private final ConversionGRListener conversionGRListener;
+    private final ConversationGRListener conversationGRListener;
     private int mCount;
 
-    public RecentConversationGroupAdapter(List<Group> groups, ConversionGRListener conversionGRListener) {
+    public RecentConversationGroupAdapter(List<Group> groups, ConversationGRListener conversationGRListener) {
         this.groups = groups;
-        this.conversionGRListener = conversionGRListener;
+        this.conversationGRListener = conversationGRListener;
         this.mCount=groups.size();
     }
 
@@ -69,13 +69,13 @@ public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentC
             binding.textRecentMessage.setText(groupChat.getLastMessage());
             binding.textTimeStamp.setText(FunctionGlobal.dateTimeFormat(groupChat.getDate()));
             binding.getRoot().setOnClickListener(v ->
-                    conversionGRListener.onClick(groupChat,groupChat.getIdGroup(),groupChat.getWatcheds()));
+                    conversationGRListener.onClick(groupChat,groupChat.getIdGroup(),groupChat.getWatcheds()));
             binding.getRoot().setOnLongClickListener(v -> {
-                final BottomSheetDialog bottomSheetDialog=new BottomSheetDialog(((GroupChatFragment)conversionGRListener).requireContext());
+                final BottomSheetDialog bottomSheetDialog=new BottomSheetDialog(((GroupChatFragment) conversationGRListener).requireContext());
                 bottomSheetDialog.setContentView(R.layout.bottomsheet_option_conversation_group);
                 View view=bottomSheetDialog.findViewById(R.id.deleteConversationGroup);
                 assert view != null;
-                view.setOnClickListener(v1 -> conversionGRListener.onClickDeleteBottomSheet(groupChat,bottomSheetDialog));
+                view.setOnClickListener(v1 -> conversationGRListener.onClickDeleteBottomSheet(groupChat,bottomSheetDialog));
                 bottomSheetDialog.show();
                 return true;
             });
@@ -83,7 +83,7 @@ public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentC
             {
                 binding.textName.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                 binding.textRecentMessage.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-                binding.textRecentMessage.setTextColor(((GroupChatFragment)conversionGRListener).getResources().getColor(R.color.secondary_text));
+                binding.textRecentMessage.setTextColor(((GroupChatFragment) conversationGRListener).getResources().getColor(R.color.secondary_text));
                 binding.newMessage.setVisibility(View.GONE);
             }
             else{

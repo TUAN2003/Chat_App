@@ -1,6 +1,5 @@
 package com.example.chat_app.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +50,7 @@ public class ListFriendFragment extends Fragment implements UserListenser {
 
     @Override
     public void onUserClicked(User user) {
-        Activity activity = getActivity();
+        FragmentActivity activity = getActivity();
         if (activity != null) {
             Context context = activity.getApplicationContext();
             Intent intent = new Intent(context, ChatActivity.class);
@@ -88,8 +88,7 @@ public class ListFriendFragment extends Fragment implements UserListenser {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         String userId = SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID);
         DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USERS).document(userId);
-        documentReference.get()
-                .addOnSuccessListener(
+        documentReference.get().addOnSuccessListener(
                         documentSnapshot -> {
                             loading(false);
                             final List<String> listFriendId = (List<String>) documentSnapshot.get(Constants.KEY_LIST_FRIEND);

@@ -95,6 +95,7 @@ public class ChatActivity extends AppCompatActivity {
         loadReceiverDetails();
         init();
         listenMessages();
+        listenAvailabilityOfReceiver();
     }
 
     private void init() {
@@ -109,20 +110,22 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void listenAvailabilityOfReceiver() {
-        database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
-                .document(conversionId)
-                .addSnapshotListener(ChatActivity.this, (value, error) -> {
-                    if (error != null)
-                        return;
-                    if (value != null) {
-                        Boolean res = value.getBoolean(receiverUser.id);
-                        isReceiverAvailable = res!= null && res;
-                    }
-                    if (isReceiverAvailable) {
-                        binding.textAvailability.setVisibility(View.VISIBLE);
-                    } else
-                        binding.textAvailability.setVisibility(View.GONE);
-                });
+        if(conversionId != null){
+            database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                    .document(conversionId)
+                    .addSnapshotListener(ChatActivity.this, (value, error) -> {
+                        if (error != null)
+                            return;
+                        if (value != null) {
+                            Boolean res = value.getBoolean(receiverUser.id);
+                            isReceiverAvailable = (res!= null && res);
+                        }
+                        if (isReceiverAvailable) {
+                            binding.textAvailability.setVisibility(View.VISIBLE);
+                        } else
+                            binding.textAvailability.setVisibility(View.GONE);
+                    });
+        }
     }
 
     private void listenMessages() {
@@ -304,24 +307,35 @@ public class ChatActivity extends AppCompatActivity {
     private final OnCompleteListener<QuerySnapshot> conversionOnCompleteListener = task -> {
         if (task.isSuccessful() && task.getResult() != null && task.getResult().getDocuments().size() > 0) {
             DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
-            conversionId = documentSnapshot.getId();
+            setConversationId(documentSnapshot.getId());
         }
     };
 
     @Override
     protected void onResume() {
         super.onResume();
-            database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
-                    .document(conversionId)
-                    .update(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID),true);
-        listenAvailabilityOfReceiver();
+        if(conversionId != null)
+            statusSwitch(true);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        if(conversionId != null)
+            statusSwitch(null);
+    }
+
+    private void statusSwitch(Boolean status){
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                 .document(conversionId)
-                .update(preferenceManager.getString(Constants.KEY_USER_ID),null);
+                .update(preferenceManager.getString(Constants.KEY_USER_ID),status);
+    }
+
+    private void setConversationId(String conversationId){
+        if(conversationId != null){
+            this.conversionId = conversationId;
+            listenAvailabilityOfReceiver();
+            statusSwitch(true);
+        }
     }
 }

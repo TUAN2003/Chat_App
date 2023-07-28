@@ -2,7 +2,6 @@ package com.example.chat_app.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager2.widget.ViewPager2;
@@ -16,7 +15,7 @@ import com.example.chat_app.R;
 import com.example.chat_app.adapters.ViewPager2Adapter;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class ContainerFragmentActivity extends AppCompatActivity {
+public class ContainerFragmentActivity extends BaseActivity {
     private NavigationBarView bottomNavigationView;
     private ViewPager2 viewPager;
     private Toolbar toolbar;
@@ -34,17 +33,20 @@ public class ContainerFragmentActivity extends AppCompatActivity {
     }
 
     private void bindingView() {
+        //header
+        DrawerLayout rootView = findViewById(R.id.drawer_layout);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        viewPager = findViewById(R.id.fragmentContainer);
-        ViewPager2Adapter viewPager2Adapter = new ViewPager2Adapter(this);
-        viewPager.setAdapter(viewPager2Adapter);
-        DrawerLayout rootView = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle actionBarDrawerToggle =
                 new ActionBarDrawerToggle(this, rootView, toolbar, R.string.open_drawer, R.string.close_drawer);
         rootView.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
+        //body
+        viewPager = findViewById(R.id.fragmentContainer);
+        ViewPager2Adapter viewPager2Adapter = new ViewPager2Adapter(this);
+        viewPager.setAdapter(viewPager2Adapter);
+        //footer
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
     }
 
     private void setListeners() {

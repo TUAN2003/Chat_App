@@ -16,7 +16,7 @@ import com.example.chat_app.R;
 import com.example.chat_app.activities.SignInActivity;
 import com.example.chat_app.databinding.ItemContainerRecentConversionBinding;
 import com.example.chat_app.fragments.HomeFragment;
-import com.example.chat_app.listeners.ConversionListener;
+import com.example.chat_app.listeners.ConversationListener;
 import com.example.chat_app.models.Conversation;
 import com.example.chat_app.models.User;
 import com.example.chat_app.utilities.Constants;
@@ -27,12 +27,12 @@ import java.util.List;
 
 public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConversationsAdapter.ConversionViewHolder> {
     private final List<Conversation> conversations;
-    private final ConversionListener conversionListener;
+    private final ConversationListener conversationListener;
     private int mCount;
 
-    public RecentConversationsAdapter(List<Conversation> conversations, ConversionListener conversionListener) {
+    public RecentConversationsAdapter(List<Conversation> conversations, ConversationListener conversationListener) {
         this.conversations = conversations;
-        this.conversionListener = conversionListener;
+        this.conversationListener = conversationListener;
         this.mCount = conversations.size();
     }
 
@@ -75,14 +75,14 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
                 user.id = conversation.receiverId;
                 user.name = conversation.receiverName;
                 user.image = conversation.receiverImage;
-                conversionListener.onConversionClicked(user,conversation.conversationId,conversation.newMessageOf);
+                conversationListener.onConversationClicked(user,conversation.conversationId,conversation.newMessageOf);
             });
             binding.getRoot().setOnLongClickListener(v -> {
-                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(((HomeFragment) conversionListener).requireContext());
+                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(((HomeFragment) conversationListener).requireContext());
                 bottomSheetDialog.setContentView(R.layout.bottomsheet_option_conversation);
                 View view = bottomSheetDialog.findViewById(R.id.deleteConversation);
                 assert view != null;
-                view.setOnClickListener(v1 -> conversionListener.onClickDeleteBottomSheet(conversation, bottomSheetDialog));
+                view.setOnClickListener(v1 -> conversationListener.onClickDeleteBottomSheet(conversation, bottomSheetDialog));
                 bottomSheetDialog.show();
                 return true;
             });
@@ -96,7 +96,7 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
             else{
                 binding.textName.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                 binding.textRecentMessage.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-                binding.textRecentMessage.setTextColor(((HomeFragment)conversionListener).getResources().getColor(R.color.secondary_text));
+                binding.textRecentMessage.setTextColor(((HomeFragment)conversationListener).getResources().getColor(R.color.secondary_text));
                 binding.newMessage.setVisibility(View.GONE);
             }
             if (position == mCount - 1)

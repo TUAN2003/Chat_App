@@ -62,10 +62,8 @@ public class SignUpActivity extends AppCompatActivity {
                     pickImage.launch(intent);
                     return true;
                 } else if (item.getItemId() == idDropImage) {
-                    this.binding
-                            .imageProfile
-                            .setImageBitmap(
-                                    BitmapFactory.decodeResource(getResources(), R.drawable.avatar_default_2));
+                    this.binding.imageProfile.setImageBitmap(
+                            BitmapFactory.decodeResource(getResources(), R.drawable.avatar_default_2));
                     this.encodedImage = null;
                     return true;
                 }
@@ -116,7 +114,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 });
                     } else {
                         loading(false);
-                        showToast("tên người dùng đã tồn tại");
+                        showToast("Email đã được đã được đăng kí");
                     }
                 });
     }

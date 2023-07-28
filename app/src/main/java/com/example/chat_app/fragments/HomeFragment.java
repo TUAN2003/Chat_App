@@ -21,7 +21,7 @@ import com.example.chat_app.activities.ContainerFragmentActivity;
 import com.example.chat_app.activities.SignInActivity;
 import com.example.chat_app.adapters.RecentConversationsAdapter;
 import com.example.chat_app.databinding.FragmentHomeBinding;
-import com.example.chat_app.listeners.ConversionListener;
+import com.example.chat_app.listeners.ConversationListener;
 import com.example.chat_app.models.Conversation;
 import com.example.chat_app.models.User;
 import com.example.chat_app.utilities.Constants;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements ConversionListener {
+public class HomeFragment extends Fragment implements ConversationListener {
 
     private FragmentHomeBinding binding;
     private ContainerFragmentActivity parentActivity;
@@ -137,17 +137,16 @@ public class HomeFragment extends Fragment implements ConversionListener {
         );
         documentReference.update(Constants.KEY_FCM_TOKEN, token)
                 .addOnFailureListener(
-                        e -> Toast.makeText(parentActivity.getApplicationContext(), "Không thể cập nhập token", Toast.LENGTH_SHORT).show()
+                        e -> Toast.makeText(parentActivity, "Không thể cập nhập token", Toast.LENGTH_SHORT).show()
                 );
     }
 
     @Override
-    public void onConversionClicked(User user,String conversationId,String newMessageOf) {
+    public void onConversationClicked(User user,String conversationId,String newMessageOf) {
         if(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID).equals(newMessageOf)){
             database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                     .document(conversationId)
-                    .update(Constants.KEY_NEW_MESSAGE_OF,""
-                    ,SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID),true);
+                    .update(Constants.KEY_NEW_MESSAGE_OF,"");
         }
         Intent intent = new Intent(parentActivity.getApplicationContext(), ChatActivity.class);
         intent.putExtra(Constants.KEY_USER, user);

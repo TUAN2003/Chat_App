@@ -9,6 +9,8 @@ import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.chat_app.adapters.ChatGroupAdapter;
 import com.example.chat_app.databinding.ActivityChatGroupBinding;
 import com.example.chat_app.models.Message;
@@ -30,7 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class ChatGroupActivity extends BaseActivity {
+public class ChatGroupActivity extends AppCompatActivity {
 
     private ActivityChatGroupBinding binding;
     private List<Message> chatMessages;

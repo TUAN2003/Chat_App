@@ -20,7 +20,7 @@ import com.example.chat_app.activities.ContainerFragmentActivity;
 import com.example.chat_app.activities.SignInActivity;
 import com.example.chat_app.adapters.RecentConversationGroupAdapter;
 import com.example.chat_app.databinding.FragmentGroupChatBinding;
-import com.example.chat_app.listeners.ConversionGRListener;
+import com.example.chat_app.listeners.ConversationGRListener;
 import com.example.chat_app.models.Group;
 import com.example.chat_app.utilities.Constants;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class GroupChatFragment extends Fragment implements ConversionGRListener {
+public class GroupChatFragment extends Fragment implements ConversationGRListener {
     private FragmentGroupChatBinding binding;
     private ContainerFragmentActivity parentActivity;
     private List<Group> conversations;
