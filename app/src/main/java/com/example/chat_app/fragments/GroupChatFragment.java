@@ -154,6 +154,5 @@ public class GroupChatFragment extends Fragment implements ConversationGRListene
         AlertDialog alertDialog = builder.show();
         alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.RED);
         alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.main_color_blue));
-
     }
 }

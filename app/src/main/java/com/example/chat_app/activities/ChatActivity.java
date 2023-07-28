@@ -52,7 +52,7 @@ public class ChatActivity extends AppCompatActivity {
     private ChatAdapter chatAdapter;
     private PreferenceManager preferenceManager;
     private FirebaseFirestore database;
-    private String conversionId = null;
+    private String conversationId = null;
     private boolean isReceiverAvailable = false;
 
     @SuppressLint("NotifyDataSetChanged")
@@ -82,7 +82,7 @@ public class ChatActivity extends AppCompatActivity {
             binding.chatRecyclerView.setVisibility(View.VISIBLE);
         }
         binding.progressBar.setVisibility(View.GONE);
-        if (conversionId == null)
+        if (conversationId == null)
             checkForConversion();
     };
 
@@ -110,9 +110,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void listenAvailabilityOfReceiver() {
-        if(conversionId != null){
+        if(conversationId != null){
             database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
-                    .document(conversionId)
+                    .document(conversationId)
                     .addSnapshotListener(ChatActivity.this, (value, error) -> {
                         if (error != null)
                             return;
@@ -146,20 +146,20 @@ public class ChatActivity extends AppCompatActivity {
         message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
         message.put(Constants.KEY_TIMESTAMP, new Date());
         database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
-        if (conversionId != null)
-            updateConversion(binding.inputMessage.getText().toString(), receiverUser.id);
+        if (conversationId != null)
+            updateConversation(binding.inputMessage.getText().toString(), receiverUser.id);
         else {
-            HashMap<String, Object> conversion = new HashMap<>();
-            conversion.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
-            conversion.put(Constants.KEY_SENDER_NAME, preferenceManager.getString(Constants.KEY_NAME));
-            conversion.put(Constants.KEY_SENDER_IMAGE, preferenceManager.getString(Constants.KEY_IMAGE));
-            conversion.put(Constants.KEY__RECEIVER_ID, receiverUser.id);
-            conversion.put(Constants.KEY_RECEIVER_NAME, receiverUser.name);
-            conversion.put(Constants.KEY_RECEIVER_IMAGE, receiverUser.image);
-            conversion.put(Constants.KEY_LAST_MESSAGE, binding.inputMessage.getText().toString());
-            conversion.put(Constants.KEY_TIMESTAMP, new Date());
-            conversion.put(Constants.KEY_NEW_MESSAGE_OF, receiverUser.id);
-            addConversion(conversion);
+            HashMap<String, Object> conversation = new HashMap<>();
+            conversation.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+            conversation.put(Constants.KEY_SENDER_NAME, preferenceManager.getString(Constants.KEY_NAME));
+            conversation.put(Constants.KEY_SENDER_IMAGE, preferenceManager.getString(Constants.KEY_IMAGE));
+            conversation.put(Constants.KEY__RECEIVER_ID, receiverUser.id);
+            conversation.put(Constants.KEY_RECEIVER_NAME, receiverUser.name);
+            conversation.put(Constants.KEY_RECEIVER_IMAGE, receiverUser.image);
+            conversation.put(Constants.KEY_LAST_MESSAGE, binding.inputMessage.getText().toString().trim());
+            conversation.put(Constants.KEY_TIMESTAMP, new Date());
+            conversation.put(Constants.KEY_NEW_MESSAGE_OF, receiverUser.id);
+            addConversion(conversation);
         }
         if (!isReceiverAvailable) {
             try {
@@ -232,7 +232,7 @@ public class ChatActivity extends AppCompatActivity {
     private void loadReceiverDetails() {
         receiverUser = (User) getIntent().getSerializableExtra(Constants.KEY_USER);
         binding.textName.setText(receiverUser.name);
-        conversionId = getIntent().getStringExtra(Constants.KEY_CONVERSATION_ID);
+        conversationId = getIntent().getStringExtra(Constants.KEY_CONVERSATION_ID);
     }
 
     private void setListener() {
@@ -261,15 +261,15 @@ public class ChatActivity extends AppCompatActivity {
         return new SimpleDateFormat("HH:mm dd MMMM", Locale.getDefault()).format(date);
     }
 
-    private void addConversion(HashMap<String, Object> conversion) {
+    private void addConversion(HashMap<String, Object> conversation) {
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
-                .add(conversion)
-                .addOnSuccessListener(documentReference -> conversionId = documentReference.getId());
+                .add(conversation)
+                .addOnSuccessListener(documentReference -> conversationId = documentReference.getId());
     }
 
-    private void updateConversion(String message, String newMessageOf) {
+    private void updateConversation(String message, String newMessageOf) {
         DocumentReference documentReference =
-                database.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document(conversionId);
+                database.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document(conversationId);
         if(!isReceiverAvailable){
             documentReference.update(
                     Constants.KEY_LAST_MESSAGE, message
@@ -314,26 +314,26 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(conversionId != null)
+        if(conversationId != null)
             statusSwitch(true);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if(conversionId != null)
+        if(conversationId != null)
             statusSwitch(null);
     }
 
     private void statusSwitch(Boolean status){
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
-                .document(conversionId)
+                .document(conversationId)
                 .update(preferenceManager.getString(Constants.KEY_USER_ID),status);
     }
 
     private void setConversationId(String conversationId){
         if(conversationId != null){
-            this.conversionId = conversationId;
+            this.conversationId = conversationId;
             listenAvailabilityOfReceiver();
             statusSwitch(true);
         }
