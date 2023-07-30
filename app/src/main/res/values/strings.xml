@@ -15,7 +15,7 @@
     <string name="todo">TODO</string>
     <string name="select_user">Danh sách bạn bè</string>
     <string name="hint_message">Message</string>
-    <string name="online">Online</string>
+    <string name="online">Đang xem</string>
     <string name="already_have_an_account">Bạn đã có tài khoản?</string>
     <string name="message_dialog_logout">Đăng xuất tài khoản khỏi ứng dụng của bạn?</string>
     <string name="text_negative_logout">ĐĂNG XUẤT</string>
