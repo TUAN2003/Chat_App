@@ -110,7 +110,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void listenAvailabilityOfReceiver() {
-        if(conversationId != null){
+        if (conversationId != null) {
             database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                     .document(conversationId)
                     .addSnapshotListener(ChatActivity.this, (value, error) -> {
@@ -118,7 +118,7 @@ public class ChatActivity extends AppCompatActivity {
                             return;
                         if (value != null) {
                             Boolean res = value.getBoolean(receiverUser.id);
-                            isReceiverAvailable = (res!= null && res);
+                            isReceiverAvailable = (res != null && res);
                         }
                         if (isReceiverAvailable) {
                             binding.textAvailability.setVisibility(View.VISIBLE);
@@ -159,7 +159,7 @@ public class ChatActivity extends AppCompatActivity {
             conversation.put(Constants.KEY_LAST_MESSAGE, binding.inputMessage.getText().toString().trim());
             conversation.put(Constants.KEY_TIMESTAMP, new Date());
             conversation.put(Constants.KEY_NEW_MESSAGE_OF, receiverUser.id);
-            addConversion(conversation);
+            addConversation(conversation);
         }
         if (!isReceiverAvailable) {
             try {
@@ -243,6 +243,7 @@ public class ChatActivity extends AppCompatActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0)
@@ -250,6 +251,7 @@ public class ChatActivity extends AppCompatActivity {
                 else
                     binding.layoutSend.setVisibility(View.GONE);
             }
+
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -261,25 +263,25 @@ public class ChatActivity extends AppCompatActivity {
         return new SimpleDateFormat("HH:mm dd MMMM", Locale.getDefault()).format(date);
     }
 
-    private void addConversion(HashMap<String, Object> conversation) {
+    private void addConversation(HashMap<String, Object> conversation) {
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                 .add(conversation)
-                .addOnSuccessListener(documentReference -> conversationId = documentReference.getId());
+                .addOnSuccessListener(documentReference -> setConversationId(documentReference.getId()));
     }
 
     private void updateConversation(String message, String newMessageOf) {
         DocumentReference documentReference =
                 database.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document(conversationId);
-        if(!isReceiverAvailable){
+        if (!isReceiverAvailable) {
             documentReference.update(
                     Constants.KEY_LAST_MESSAGE, message
-                    ,Constants.KEY_TIMESTAMP, new Date()
-                    ,Constants.KEY_NEW_MESSAGE_OF, newMessageOf);
-        }else{
+                    , Constants.KEY_TIMESTAMP, new Date()
+                    , Constants.KEY_NEW_MESSAGE_OF, newMessageOf);
+        } else {
             documentReference.update(
                     Constants.KEY_LAST_MESSAGE, message
-                    ,Constants.KEY_TIMESTAMP, new Date()
-                    ,Constants.KEY_NEW_MESSAGE_OF, "");
+                    , Constants.KEY_TIMESTAMP, new Date()
+                    , Constants.KEY_NEW_MESSAGE_OF, "");
         }
     }
 
@@ -314,25 +316,25 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(conversationId != null)
+        if (conversationId != null)
             statusSwitch(true);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if(conversationId != null)
+        if (conversationId != null)
             statusSwitch(null);
     }
 
-    private void statusSwitch(Boolean status){
+    private void statusSwitch(Boolean status) {
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                 .document(conversationId)
-                .update(preferenceManager.getString(Constants.KEY_USER_ID),status);
+                .update(preferenceManager.getString(Constants.KEY_USER_ID), status);
     }
 
-    private void setConversationId(String conversationId){
-        if(conversationId != null){
+    private void setConversationId(String conversationId) {
+        if (conversationId != null) {
             this.conversationId = conversationId;
             listenAvailabilityOfReceiver();
             statusSwitch(true);
