@@ -142,15 +142,15 @@ public class HomeFragment extends Fragment implements ConversationListener {
     }
 
     @Override
-    public void onConversationClicked(User user,String conversationId,String newMessageOf) {
-        if(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID).equals(newMessageOf)){
+    public void onConversationClicked(User user, String conversationId, String newMessageOf) {
+        if (SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID).equals(newMessageOf)) {
             database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                     .document(conversationId)
-                    .update(Constants.KEY_NEW_MESSAGE_OF,"");
+                    .update(Constants.KEY_NEW_MESSAGE_OF, "");
         }
         Intent intent = new Intent(parentActivity.getApplicationContext(), ChatActivity.class);
         intent.putExtra(Constants.KEY_USER, user);
-        intent.putExtra(Constants.KEY_CONVERSATION_ID,conversationId);
+        intent.putExtra(Constants.KEY_CONVERSATION_ID, conversationId);
         startActivity(intent);
     }
 
