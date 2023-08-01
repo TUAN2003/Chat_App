@@ -162,7 +162,7 @@ public class HomeFragment extends Fragment implements ConversationListener {
         builder.setTitle("Xóa cuộc hội thoại")
                 .setMessage("Bạn có muốn chắc chắn xóa cuộc hội thoại với \"" + conversation.receiverName + "\"")
                 .setNegativeButton("Xác nhận xóa", (dialog1, which) -> {
-                    HomeFragment.this.database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                    database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                             .document(conversation.conversationId)
                             .delete()
                             .addOnCompleteListener(task -> {
