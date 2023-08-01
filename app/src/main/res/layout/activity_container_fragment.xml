@@ -10,7 +10,7 @@
 
     <include
         android:id="@+id/ownerLayout"
-        layout="@layout/owner_layout"
+        layout="@layout/container_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
