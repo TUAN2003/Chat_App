@@ -34,7 +34,7 @@ public class ContainerFragmentActivity extends BaseActivity {
 
     private void bindingView() {
         //header
-        DrawerLayout rootView = findViewById(R.id.drawer_layout);
+        DrawerLayout rootView = findViewById(R.id.drawerLayout);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle actionBarDrawerToggle =
