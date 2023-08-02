@@ -72,7 +72,7 @@
             android:layout_marginEnd="@dimen/_12sdp"
             android:layout_toStartOf="@id/imageInfo"
             android:padding="@dimen/_4sdp"
-            android:src="@drawable/round_video_call_24"
+            android:src="@drawable/round_videocam_24"
             android:layout_centerVertical="true"
             android:tint="@color/white" />
 
