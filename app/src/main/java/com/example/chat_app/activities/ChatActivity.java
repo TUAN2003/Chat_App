@@ -260,7 +260,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private String getReadableDateTime(Date date) {
-        return new SimpleDateFormat("HH:mm dd MMMM", Locale.getDefault()).format(date);
+        return new SimpleDateFormat("HH:mm, d MMMM", Locale.getDefault()).format(date);
     }
 
     private void addConversation(HashMap<String, Object> conversation) {
