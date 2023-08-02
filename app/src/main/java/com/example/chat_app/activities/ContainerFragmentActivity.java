@@ -13,9 +13,17 @@ import android.view.MenuItem;
 
 import com.example.chat_app.R;
 import com.example.chat_app.adapters.ViewPager2Adapter;
+import com.example.chat_app.utilities.Constants;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
 
 public class ContainerFragmentActivity extends BaseActivity {
+    private NavigationView navigationView;
     private NavigationBarView bottomNavigationView;
     private ViewPager2 viewPager;
     private Toolbar toolbar;
@@ -48,10 +56,12 @@ public class ContainerFragmentActivity extends BaseActivity {
         viewPager.setAdapter(viewPager2Adapter);
         //footer
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        navigationView = findViewById(R.id.nav_view);
     }
 
     private void setListeners() {
         this.bottomNavigationView.setOnItemSelectedListener(navListener);
+        this.navigationView.setNavigationItemSelectedListener(navigationItemSelectedListener);
         this.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -155,5 +165,26 @@ public class ContainerFragmentActivity extends BaseActivity {
                 toolbar.inflateMenu(R.menu.menu_home_fragment);
 
         }
+    }
+
+    NavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = item -> {
+        if(item.getItemId() == R.id.itemLogout)
+            signOut();
+        return true;
+    };
+
+    private void signOut() {
+        DocumentReference documentReference = FirebaseFirestore.getInstance()
+                .collection(Constants.KEY_COLLECTION_USERS).document(
+                SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)
+        );
+        HashMap<String, Object> updates = new HashMap<>();
+        updates.put(Constants.KEY_FCM_TOKEN, FieldValue.delete());
+        documentReference.update(updates)
+                .addOnSuccessListener(unused -> {
+                    SignInActivity.preferenceManager.clear();
+                    startActivity(new Intent(getApplicationContext(), SignInActivity.class));
+                    finish();
+                });
     }
 }

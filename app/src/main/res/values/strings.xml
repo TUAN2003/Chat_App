@@ -42,7 +42,7 @@
     <string name="chat_ai">Chat Bot</string>
     <string name="nav_header">nav header</string>
     <string name="vu_anh_tuan">VU ANH TUAN</string>
-    <string name="tuananhvund0321_gmail_com">tuananhvund0321@gmail.com</string>
+    <string name="tuananhvund0321_gmail_com">Contact: tuananhvund0321@gmail.com</string>
     <string name="open_drawer">open drawer</string>
     <string name="close_drawer">close drawer</string>
     <string name="text_additional">bổ sung</string>
@@ -53,4 +53,6 @@
     <string name="text_unfriend">Xóa kết bạn</string>
     <string name="text_title_unfriend">Bạn có muốn xóa kết bạn?</string>
     <string name="n">N</string>
+    <string name="text_setting">Cài đặt</string>
+    <string name="copyright">Copyright VU ANH TUAN</string>
 </resources>

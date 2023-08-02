@@ -25,7 +25,8 @@
             android:exported="false" />
         <activity
             android:name=".activities.ChatGroupActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activities.SearchActivity"
             android:exported="false" />
