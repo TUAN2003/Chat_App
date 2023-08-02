@@ -20,6 +20,7 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -30,7 +31,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 public class ChatGroupActivity extends AppCompatActivity {
 
@@ -40,7 +40,8 @@ public class ChatGroupActivity extends AppCompatActivity {
     private ChatGroupAdapter chatGroupAdapter;
     private FirebaseFirestore database;
     private Group groupChat;
-    private boolean isOnline = false;
+    private List<String> usersOnline;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +50,7 @@ public class ChatGroupActivity extends AppCompatActivity {
         setListener();
         loadReceiverDetails();
         init();
+        listenerUsersOnline();
     }
 
     private void setListener() {
@@ -82,12 +84,9 @@ public class ChatGroupActivity extends AppCompatActivity {
         message.put(Constants.KEY_GROUP_ID, groupChat.getIdGroup());
         message.put(Constants.KEY_MESSAGE, inputMessage);
         message.put(Constants.KEY_TIMESTAMP, new Date());
-        database.collection(Constants.KEY_COLLECTION_CHAT).add(message)
-                .addOnSuccessListener(documentReference -> {
-                    List<String> l = new ArrayList<>();
-                    l.add(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID));
-                    updateConversion(inputMessage,l);
-                });
+        database.collection(Constants.KEY_COLLECTION_CHAT)
+                .add(message)
+                .addOnSuccessListener(documentReference -> updateConversion(inputMessage, usersOnline));
         binding.inputMessage.setText("");
     }
 
@@ -157,7 +156,7 @@ public class ChatGroupActivity extends AppCompatActivity {
     };
 
     private String getReadableDateTime(Date date) {
-        return new SimpleDateFormat("HH:mm dd MMMM", Locale.getDefault()).format(date);
+        return new SimpleDateFormat("HH:mm, d MMMM", Locale.getDefault()).format(date);
     }
 
     private void updateConversion(String message, List<String> watcheds) {
@@ -170,20 +169,31 @@ public class ChatGroupActivity extends AppCompatActivity {
                 , Constants.KEY_TIMESTAMP, new Date());
     }
 
-    private void listenerUserOnline() {
-        database.collection(Constants.KEY_COLLECTION_USERS)
-                .document(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID))
+    private void listenerUsersOnline() {
+        database.collection(Constants.KEY_COLLECTION_GROUPS)
+                .document(groupChat.getIdGroup())
                 .addSnapshotListener(this, (value, error) -> {
                     if (error != null)
                         return;
-                    if (value != null)
-                        isOnline = Objects.requireNonNull(value.getLong(Constants.KEY_AVAILABILITY)).intValue() == 1;
+                    if (value != null) {
+                        usersOnline = (List<String>) value.get(Constants.KEY_USERS_ONLINE);
+                    }
                 });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        listenerUserOnline();
+        database.collection(Constants.KEY_COLLECTION_GROUPS)
+                .document(groupChat.getIdGroup())
+                .update(Constants.KEY_USERS_ONLINE, FieldValue.arrayUnion(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        database.collection(Constants.KEY_COLLECTION_GROUPS)
+                .document(groupChat.getIdGroup())
+                .update(Constants.KEY_USERS_ONLINE, FieldValue.arrayRemove(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)));
     }
 }

@@ -19,6 +19,7 @@ public class ContainerFragmentActivity extends BaseActivity {
     private NavigationBarView bottomNavigationView;
     private ViewPager2 viewPager;
     private Toolbar toolbar;
+    private int indexFragment = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,19 +59,19 @@ public class ContainerFragmentActivity extends BaseActivity {
                 switch (position) {
                     case 1:
                         bottomNavigationView.getMenu().findItem(R.id.itemMessageGroup).setChecked(true);
-                        ContainerFragmentActivity.this.toolbar.setTitle(R.string.label_group_chat);
+                        changeFragment(1);
                         break;
                     case 2:
                         bottomNavigationView.getMenu().findItem(R.id.itemFriends).setChecked(true);
-                        ContainerFragmentActivity.this.toolbar.setTitle(R.string.label_friends);
+                        changeFragment(2);
                         break;
                     case 3:
                         bottomNavigationView.getMenu().findItem(R.id.itemChatBot).setChecked(true);
-                        ContainerFragmentActivity.this.toolbar.setTitle(R.string.chat_ai);
+                        changeFragment(3);
                         break;
                     default:
                         bottomNavigationView.getMenu().findItem(R.id.itemMessage).setChecked(true);
-                        ContainerFragmentActivity.this.toolbar.setTitle(R.string.text_title_home);
+                        changeFragment(0);
                         break;
                 }
             }
@@ -86,16 +87,16 @@ public class ContainerFragmentActivity extends BaseActivity {
             final int idItemChatBot = R.id.itemChatBot;
             if (idSelectedItem == idItemGroupChat) {
                 viewPager.setCurrentItem(1, false);
-                ContainerFragmentActivity.this.toolbar.setTitle(R.string.label_group_chat);
+                changeFragment(1);
             } else if (idSelectedItem == idItemFriends) {
                 viewPager.setCurrentItem(2, false);
-                ContainerFragmentActivity.this.toolbar.setTitle(R.string.label_friends);
+                changeFragment(2);
             } else if (idSelectedItem == idItemChatBot) {
                 viewPager.setCurrentItem(3, false);
-                ContainerFragmentActivity.this.toolbar.setTitle(R.string.chat_ai);
+                changeFragment(3);
             } else {
                 viewPager.setCurrentItem(0, false);
-                ContainerFragmentActivity.this.toolbar.setTitle(R.string.text_title_home);
+                changeFragment(0);
             }
             return true;
         }
@@ -103,7 +104,20 @@ public class ContainerFragmentActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_option_user, menu);
+        menu.clear();
+        switch (indexFragment) {
+            case 1:
+                getMenuInflater().inflate(R.menu.menu_group_chat, menu);
+                break;
+            case 2:
+                getMenuInflater().inflate(R.menu.menu_list_friend, menu);
+                break;
+            case 3:
+                getMenuInflater().inflate(R.menu.menu_chat_bot, menu);
+                break;
+            default:
+                getMenuInflater().inflate(R.menu.menu_home_fragment, menu);
+        }
         return true;
     }
 
@@ -118,5 +132,28 @@ public class ContainerFragmentActivity extends BaseActivity {
             return true;
         }
         return false;
+    }
+
+    private void changeFragment(int position) {
+        indexFragment = position;
+        toolbar.getMenu().clear();
+        switch (position) {
+            case 1:
+                ContainerFragmentActivity.this.toolbar.setTitle(R.string.label_group_chat);
+                toolbar.inflateMenu(R.menu.menu_group_chat);
+                break;
+            case 2:
+                ContainerFragmentActivity.this.toolbar.setTitle(R.string.label_friends);
+                toolbar.inflateMenu(R.menu.menu_list_friend);
+                break;
+            case 3:
+                ContainerFragmentActivity.this.toolbar.setTitle(R.string.chat_ai);
+                toolbar.inflateMenu(R.menu.menu_chat_bot);
+                break;
+            default:
+                ContainerFragmentActivity.this.toolbar.setTitle(R.string.text_title_home);
+                toolbar.inflateMenu(R.menu.menu_home_fragment);
+
+        }
     }
 }

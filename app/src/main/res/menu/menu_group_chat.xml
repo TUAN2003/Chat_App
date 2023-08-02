@@ -1,22 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/itemSearch"
         android:icon="@drawable/outline_search_24"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         android:title="@string/text_search" />
     <item
         android:id="@+id/itemAdditional"
         android:icon="@drawable/round_add_24"
         app:showAsAction="ifRoom"
-        android:title="@string/text_additional">
-    </item>
-    <item
-        android:id="@+id/itemAddFriend"
-        android:icon="@drawable/round_person_add_alt_1_24"
-        app:showAsAction="ifRoom"
-        android:title="@string/text_additional">
-    </item>
+        android:title="@string/text_additional"/>
 </menu>
