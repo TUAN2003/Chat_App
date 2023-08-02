@@ -7,9 +7,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.chat_app.R;
 import com.example.chat_app.adapters.ViewPager2Adapter;
@@ -57,6 +61,19 @@ public class ContainerFragmentActivity extends BaseActivity {
         //footer
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         navigationView = findViewById(R.id.nav_view);
+        TextView textView = navigationView.getHeaderView(0).findViewById(R.id.headerCopyright);
+        SpannableStringBuilder builder = new SpannableStringBuilder(textView.getText().toString());
+
+        // Đổi màu của từng chữ trong văn bản
+        ForegroundColorSpan yellowSpan = new ForegroundColorSpan(Color.rgb(255,255,52));
+        ForegroundColorSpan redSpan = new ForegroundColorSpan(Color.rgb(255,50,0));
+        ForegroundColorSpan greenSpan = new ForegroundColorSpan(Color.rgb(0,210,0));
+
+        builder.setSpan(redSpan, 10, 11, 0); // Đổi màu ký tự 0 (H) thành màu đỏ
+        builder.setSpan(greenSpan, 11, 12, 0); // Đổi màu ký tự 6 (W) thành màu xanh lá
+        builder.setSpan(yellowSpan, 12, 13, 0); // Đổi màu ký tự 8 (o) thành màu xanh dương
+
+        textView.setText(builder);
     }
 
     private void setListeners() {
