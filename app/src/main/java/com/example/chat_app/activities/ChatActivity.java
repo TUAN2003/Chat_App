@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,6 +55,7 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseFirestore database;
     private String conversationId = null;
     private boolean isReceiverAvailable = false;
+    private Boolean isWatching = false;
 
     @SuppressLint("NotifyDataSetChanged")
     private final EventListener<QuerySnapshot> eventListener = (value, error) -> {
@@ -116,14 +118,20 @@ public class ChatActivity extends AppCompatActivity {
                     .addSnapshotListener(ChatActivity.this, (value, error) -> {
                         if (error != null)
                             return;
+                        String messageOf = "";
                         if (value != null) {
                             Boolean res = value.getBoolean(receiverUser.id);
                             isReceiverAvailable = (res != null && res);
+                            messageOf = value.getString(Constants.KEY_NEW_MESSAGE_OF);
                         }
                         if (isReceiverAvailable) {
                             binding.textAvailability.setVisibility(View.VISIBLE);
                         } else
                             binding.textAvailability.setVisibility(View.GONE);
+                        if(conversationId != null && isWatching != null && isWatching && Objects.requireNonNull(messageOf).equals(preferenceManager.getString(Constants.KEY_USER_ID)))
+                            database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                                    .document(conversationId)
+                                    .update(Constants.KEY_NEW_MESSAGE_OF,"");
                     });
         }
     }
@@ -272,17 +280,10 @@ public class ChatActivity extends AppCompatActivity {
     private void updateConversation(String message, String newMessageOf) {
         DocumentReference documentReference =
                 database.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document(conversationId);
-        if (!isReceiverAvailable) {
-            documentReference.update(
-                    Constants.KEY_LAST_MESSAGE, message
-                    , Constants.KEY_TIMESTAMP, new Date()
-                    , Constants.KEY_NEW_MESSAGE_OF, newMessageOf);
-        } else {
-            documentReference.update(
-                    Constants.KEY_LAST_MESSAGE, message
-                    , Constants.KEY_TIMESTAMP, new Date()
-                    , Constants.KEY_NEW_MESSAGE_OF, "");
-        }
+        documentReference.update(
+                Constants.KEY_LAST_MESSAGE, message
+                , Constants.KEY_TIMESTAMP, new Date()
+                , Constants.KEY_NEW_MESSAGE_OF, newMessageOf);
     }
 
     private void checkForConversion() {
@@ -330,7 +331,8 @@ public class ChatActivity extends AppCompatActivity {
     private void statusSwitch(Boolean status) {
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                 .document(conversationId)
-                .update(preferenceManager.getString(Constants.KEY_USER_ID), status);
+                .update(preferenceManager.getString(Constants.KEY_USER_ID), status)
+                .addOnSuccessListener(ChatActivity.this,unused -> isWatching = status);
     }
 
     private void setConversationId(String conversationId) {
