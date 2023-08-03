@@ -124,7 +124,7 @@ public class ChatGroupActivity extends AppCompatActivity {
     private void listenerMessage() {
         database.collection(Constants.KEY_COLLECTION_CHAT)
                 .whereEqualTo(Constants.KEY_GROUP_ID, groupChat.getIdGroup())
-                .addSnapshotListener(eventListener);
+                .addSnapshotListener(ChatGroupActivity.this,eventListener);
     }
 
     @SuppressLint("NotifyDataSetChanged")
