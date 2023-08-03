@@ -83,7 +83,7 @@
                 <ImageView
                     android:layout_width="@dimen/_25sdp"
                     android:layout_height="@dimen/_25sdp"
-                    android:background="@drawable/round_video_call_24"
+                    android:background="@drawable/round_videocam_24"
                     android:importantForAccessibility="no"
                     android:backgroundTint="@color/main_color_blue"
                     android:layout_gravity="center"/>
