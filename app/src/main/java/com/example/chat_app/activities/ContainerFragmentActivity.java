@@ -65,13 +65,13 @@ public class ContainerFragmentActivity extends BaseActivity {
         SpannableStringBuilder builder = new SpannableStringBuilder(textView.getText().toString());
 
         // Đổi màu của từng chữ trong văn bản
-        ForegroundColorSpan yellowSpan = new ForegroundColorSpan(Color.rgb(255,255,52));
+        ForegroundColorSpan blueSpan = new ForegroundColorSpan(Color.rgb(14,128,241));
         ForegroundColorSpan redSpan = new ForegroundColorSpan(Color.rgb(255,50,0));
         ForegroundColorSpan greenSpan = new ForegroundColorSpan(Color.rgb(0,210,0));
 
         builder.setSpan(redSpan, 10, 11, 0); // Đổi màu ký tự 0 (H) thành màu đỏ
         builder.setSpan(greenSpan, 11, 12, 0); // Đổi màu ký tự 6 (W) thành màu xanh lá
-        builder.setSpan(yellowSpan, 12, 13, 0); // Đổi màu ký tự 8 (o) thành màu xanh dương
+        builder.setSpan(blueSpan, 12, 13, 0); // Đổi màu ký tự 8 (o) thành màu xanh dương
 
         textView.setText(builder);
     }
