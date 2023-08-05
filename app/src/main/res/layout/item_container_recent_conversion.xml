@@ -11,18 +11,38 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:paddingStart="@dimen/_15sdp"
-        android:paddingEnd="@dimen/_10sdp">
+        android:paddingEnd="@dimen/_10sdp"
+        android:baselineAligned="false">
 
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/imageProfile"
+        <FrameLayout
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="@dimen/_15sdp"
-            android:background="@drawable/background_image"
-            android:backgroundTint="@color/main_color_blue"
-            android:scaleType="centerCrop"
-            app:riv_oval="true" />
+            android:layout_marginEnd="@dimen/_15sdp">
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/imageProfile"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/background_image"
+                android:backgroundTint="@color/main_color_blue"
+                android:scaleType="centerCrop"
+                app:riv_oval="true" />
+            <FrameLayout
+                android:id="@+id/status1"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_gravity="end|bottom"
+                android:background="@drawable/background_image"
+                android:backgroundTint="@color/white">
+                <View
+                    android:id="@+id/status2"
+                    android:layout_width="9dp"
+                    android:layout_height="9dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/background_image"
+                    android:backgroundTint="#00FF00"/>
+            </FrameLayout>
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"
