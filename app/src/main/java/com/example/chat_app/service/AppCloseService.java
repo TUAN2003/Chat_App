@@ -3,6 +3,7 @@ package com.example.chat_app.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -27,6 +28,7 @@ public class AppCloseService extends Service {
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
+        Toast.makeText(getApplicationContext(),"onTaskRemoved",Toast.LENGTH_SHORT).show();
         DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USERS)
                 .document(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID));
         documentReference.update(Constants.KEY_STATUS,null);

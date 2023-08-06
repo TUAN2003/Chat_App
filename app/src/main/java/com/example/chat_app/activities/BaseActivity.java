@@ -19,7 +19,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         documentReference = database.collection(Constants.KEY_COLLECTION_USERS)
                 .document(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID));
-        startService(new Intent(this, AppCloseService.class));
+        //startService(new Intent(this, AppCloseService.class));
     }
     @Override
     protected void onResume() {
