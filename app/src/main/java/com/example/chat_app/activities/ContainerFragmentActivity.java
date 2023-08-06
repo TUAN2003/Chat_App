@@ -197,6 +197,7 @@ public class ContainerFragmentActivity extends BaseActivity {
                 );
         HashMap<String, Object> updates = new HashMap<>();
         updates.put(Constants.KEY_FCM_TOKEN, FieldValue.delete());
+        updates.put(Constants.KEY_STATUS,null);
         documentReference.update(updates)
                 .addOnSuccessListener(unused -> {
                     SignInActivity.preferenceManager.clear();
