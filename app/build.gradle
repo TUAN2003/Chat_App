@@ -46,10 +46,10 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     //Firebase java
     implementation 'com.google.firebase:firebase-database:20.2.2'
-    implementation 'com.google.firebase:firebase-auth:22.1.0'
+    implementation 'com.google.firebase:firebase-auth:22.1.1'
     implementation 'com.google.firebase:firebase-storage:20.2.1'
     implementation 'com.google.firebase:firebase-firestore:24.7.0'
-    implementation 'com.google.firebase:firebase-messaging:23.2.0'
+    implementation 'com.google.firebase:firebase-messaging:23.2.1'
     implementation 'androidx.navigation:navigation-fragment:2.6.0'
 
 
