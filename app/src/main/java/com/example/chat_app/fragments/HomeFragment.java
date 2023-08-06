@@ -106,6 +106,17 @@ public class HomeFragment extends Fragment implements ConversationListener {
                     conversation.newMessageOf = documentChange.getDocument().getString(Constants.KEY_NEW_MESSAGE_OF);
                     conversation.conversationId = conversationId;
                     conversations.add(conversation);
+                    database.collection(Constants.KEY_COLLECTION_USERS)
+                            .document(conversation.receiverId)
+                            .addSnapshotListener((value1, error1) -> {
+                                if(error1 != null)
+                                    return;
+                                if(value1 != null){
+                                    Boolean status = value1.getBoolean(Constants.KEY_STATUS);
+                                    conversation.status = (status != null && status);
+                                    conversationsAdapter.notifyItemChanged(conversations.indexOf(conversation));
+                                }
+                            });
                 } else if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
                     for (int i = 0; i < conversations.size(); i++) {
                         if (conversations.get(i).conversationId.equals(conversationId)) {

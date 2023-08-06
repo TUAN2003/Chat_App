@@ -65,7 +65,7 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
         }
 
         void setData(int position) {
-            Conversation conversation=conversations.get(position);
+            Conversation conversation = conversations.get(position);
             binding.imageProfile.setImageBitmap(getConversionImage(conversation.receiverImage));
             binding.textName.setText(conversation.receiverName);
             binding.textRecentMessage.setText(conversation.lastMessage);
@@ -75,7 +75,7 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
                 user.id = conversation.receiverId;
                 user.name = conversation.receiverName;
                 user.image = conversation.receiverImage;
-                conversationListener.onConversationClicked(user,conversation.conversationId,conversation.newMessageOf);
+                conversationListener.onConversationClicked(user, conversation.conversationId, conversation.newMessageOf);
             });
             binding.getRoot().setOnLongClickListener(v -> {
                 final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(((HomeFragment) conversationListener).requireContext());
@@ -86,23 +86,26 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
                 bottomSheetDialog.show();
                 return true;
             });
-            if(conversation.newMessageOf.equals(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)))
-            {
+            if (conversation.newMessageOf.equals(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID))) {
                 binding.textName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                 binding.textRecentMessage.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                 binding.textRecentMessage.setTextColor(Color.BLACK);
                 binding.newMessage.setVisibility(View.VISIBLE);
-            }
-            else{
+            } else {
                 binding.textName.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                 binding.textRecentMessage.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-                binding.textRecentMessage.setTextColor(((HomeFragment)conversationListener).getResources().getColor(R.color.secondary_text));
+                binding.textRecentMessage.setTextColor(((HomeFragment) conversationListener).getResources().getColor(R.color.secondary_text));
                 binding.newMessage.setVisibility(View.GONE);
             }
             if (position == mCount - 1)
                 binding.lineBottom.setVisibility(View.INVISIBLE);
             else
                 binding.lineBottom.setVisibility(View.VISIBLE);
+            if (conversation.status) {
+                binding.status.setVisibility(View.VISIBLE);
+            } else {
+                binding.status.setVisibility(View.GONE);
+            }
         }
     }
 

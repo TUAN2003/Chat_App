@@ -11,7 +11,7 @@ public final class Constants {
     public static final String KEY_COLLECTION_CONVERSATIONS = "conversations";
 
     //FIELDS OF USER
-    public static final String KEY_AVAILABILITY = "availability";
+    public static final String KEY_STATUS = "status";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_FCM_TOKEN = "fcmToken";
     public static final String KEY_IMAGE = "image";

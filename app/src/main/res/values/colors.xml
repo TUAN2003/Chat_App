@@ -13,4 +13,5 @@
     <color name="light_gray">#e6e6e0</color>
     <color name="main_border">#9999ad</color>
     <color name="main_color_blue">#0e80f1</color>
+    <color name="green">#32CD32</color>
 </resources>

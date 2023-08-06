@@ -28,19 +28,18 @@
                 android:scaleType="centerCrop"
                 app:riv_oval="true" />
             <FrameLayout
-                android:id="@+id/status1"
+                android:id="@+id/status"
                 android:layout_width="13dp"
                 android:layout_height="13dp"
                 android:layout_gravity="end|bottom"
                 android:background="@drawable/background_image"
                 android:backgroundTint="@color/white">
                 <View
-                    android:id="@+id/status2"
                     android:layout_width="9dp"
                     android:layout_height="9dp"
                     android:layout_gravity="center"
                     android:background="@drawable/background_image"
-                    android:backgroundTint="#00FF00"/>
+                    android:backgroundTint="@color/green"/>
             </FrameLayout>
         </FrameLayout>
 

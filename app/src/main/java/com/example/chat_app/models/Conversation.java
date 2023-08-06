@@ -7,4 +7,5 @@ public class Conversation {
     public String receiverId,receiverName,receiverImage;
     public String lastMessage,newMessageOf;
     public Date timestamp;
+    public boolean status = false;
 }
