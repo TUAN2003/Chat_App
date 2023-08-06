@@ -65,9 +65,9 @@ public class ContainerFragmentActivity extends BaseActivity {
         SpannableStringBuilder builder = new SpannableStringBuilder(textView.getText().toString());
 
         // Đổi màu của từng chữ trong văn bản
-        ForegroundColorSpan blueSpan = new ForegroundColorSpan(Color.rgb(14,128,241));
-        ForegroundColorSpan redSpan = new ForegroundColorSpan(Color.rgb(255,50,0));
-        ForegroundColorSpan greenSpan = new ForegroundColorSpan(Color.rgb(0,210,0));
+        ForegroundColorSpan blueSpan = new ForegroundColorSpan(Color.rgb(14, 128, 241));
+        ForegroundColorSpan redSpan = new ForegroundColorSpan(Color.rgb(255, 50, 0));
+        ForegroundColorSpan greenSpan = new ForegroundColorSpan(Color.rgb(0, 210, 0));
 
         builder.setSpan(redSpan, 10, 11, 0); // Đổi màu ký tự 0 (H) thành màu đỏ
         builder.setSpan(greenSpan, 11, 12, 0); // Đổi màu ký tự 6 (W) thành màu xanh lá
@@ -184,8 +184,8 @@ public class ContainerFragmentActivity extends BaseActivity {
         }
     }
 
-    NavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = item -> {
-        if(item.getItemId() == R.id.itemLogout)
+    private final NavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = item -> {
+        if (item.getItemId() == R.id.itemLogout)
             signOut();
         return true;
     };
@@ -193,8 +193,8 @@ public class ContainerFragmentActivity extends BaseActivity {
     private void signOut() {
         DocumentReference documentReference = FirebaseFirestore.getInstance()
                 .collection(Constants.KEY_COLLECTION_USERS).document(
-                SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)
-        );
+                        SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)
+                );
         HashMap<String, Object> updates = new HashMap<>();
         updates.put(Constants.KEY_FCM_TOKEN, FieldValue.delete());
         documentReference.update(updates)
