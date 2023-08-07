@@ -108,7 +108,7 @@ public class HomeFragment extends Fragment implements ConversationListener {
                     conversations.add(conversation);
                     database.collection(Constants.KEY_COLLECTION_USERS)
                             .document(conversation.receiverId)
-                            .addSnapshotListener(parentActivity,(value1, error1) -> {
+                            .addSnapshotListener((value1, error1) -> {
                                 if(error1 != null)
                                     return;
                                 if(value1 != null){
