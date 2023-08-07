@@ -46,6 +46,16 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
     }
 
     @Override
+    public void onBindViewHolder(@NonNull ConversionViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if(payloads.isEmpty())
+            super.onBindViewHolder(holder,position,payloads);
+        else {
+            boolean status = (payloads.get(0) != null &&(Boolean) payloads.get(0));
+            holder.updateStatus(status);
+        }
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull ConversionViewHolder holder, int position) {
         holder.setData(position);
     }
@@ -101,7 +111,10 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
                 binding.lineBottom.setVisibility(View.INVISIBLE);
             else
                 binding.lineBottom.setVisibility(View.VISIBLE);
-            if (conversation.status) {
+            updateStatus(conversation.status);
+        }
+        public void updateStatus(boolean status){
+            if (status) {
                 binding.status.setVisibility(View.VISIBLE);
             } else {
                 binding.status.setVisibility(View.GONE);

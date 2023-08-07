@@ -114,7 +114,7 @@ public class HomeFragment extends Fragment implements ConversationListener {
                                 if(value1 != null){
                                     Boolean status = value1.getBoolean(Constants.KEY_STATUS);
                                     conversation.status = (status != null && status);
-                                    conversationsAdapter.notifyItemChanged(conversations.indexOf(conversation));
+                                    conversationsAdapter.notifyItemChanged(conversations.indexOf(conversation),status);
                                 }
                             });
                 } else if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
