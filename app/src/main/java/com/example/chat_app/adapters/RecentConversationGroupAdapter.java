@@ -46,7 +46,7 @@ public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentC
 
     @Override
     public void onBindViewHolder(@NonNull RecentConversationGroupAdapter.ConversionGroupViewHolder holder, int position) {
-        holder.setData(groups.get(position),position);
+        holder.setData(position);
     }
 
     @Override
@@ -63,7 +63,8 @@ public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentC
             binding = itemContainerRecentConversationBinding;
         }
 
-        void setData(Group groupChat, int position) {
+        void setData(int position) {
+            Group groupChat = groups.get(position);
             binding.imageProfile.setImageBitmap(getConversionImage(groupChat.getEnCodeImage()));
             binding.textName.setText(groupChat.getNameGroup());
             binding.textRecentMessage.setText(groupChat.getLastMessage());
@@ -96,6 +97,10 @@ public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentC
                 binding.lineBottom.setVisibility(View.INVISIBLE);
             else
                 binding.lineBottom.setVisibility(View.VISIBLE);
+            if(groupChat.isStatus())
+                binding.status.setVisibility(View.VISIBLE);
+            else
+                binding.status.setVisibility(View.GONE);
         }
     }
 

@@ -99,15 +99,55 @@ public class GroupChatFragment extends Fragment implements ConversationGRListene
                     groupChat.setIdMember(idMembers);
                     groupChat.setWatcheds(watcheds);
                     conversations.add(groupChat);
+                    if(idMembers != null){
+                        database.collection(Constants.KEY_COLLECTION_USERS)
+                                .whereIn(Constants.KEY_USER_ID,idMembers)
+                                .whereNotEqualTo(Constants.KEY_USER_ID,SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID))
+                                .addSnapshotListener((value1, error1) -> {
+                                    if (error1 != null)
+                                        return;
+                                    int index = conversations.indexOf(groupChat);
+                                    if(value1 != null){
+                                        Boolean b = null;
+                                        for(DocumentChange doc:value1.getDocumentChanges()){
+                                            b = doc.getDocument().getBoolean(Constants.KEY_STATUS);
+                                            if(b != null && b)
+                                                break;
+                                        }
+                                        groupChat.setStatus(b != null && b);
+                                        conversationGroupAdapter.notifyItemChanged(index);
+                                    }
+                                });
+                    }
                 } else if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
                     for (int i = 0; i < conversations.size(); i++) {
                         if (conversations.get(i).getIdGroup().equals(idGroup)) {
-                            conversations.get(i).setNameGroup(nameGroup);
-                            conversations.get(i).setDate(date);
-                            conversations.get(i).setLastMessage(lastMessage);
-                            conversations.get(i).setEnCodeImage(enCodeImage);
-                            conversations.get(i).setIdMember(idMembers);
-                            conversations.get(i).setWatcheds(watcheds);
+                            int index = i;
+                            conversations.get(index).setNameGroup(nameGroup);
+                            conversations.get(index).setDate(date);
+                            conversations.get(index).setLastMessage(lastMessage);
+                            conversations.get(index).setEnCodeImage(enCodeImage);
+                            conversations.get(index).setIdMember(idMembers);
+                            conversations.get(index).setWatcheds(watcheds);
+                            if(idMembers != null){
+                                database.collection(Constants.KEY_COLLECTION_USERS)
+                                        .whereIn(Constants.KEY_USER_ID,idMembers)
+                                        .whereNotEqualTo(Constants.KEY_USER_ID,SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID))
+                                        .addSnapshotListener((value1, error1) -> {
+                                            if (error1 != null)
+                                                return;
+                                            if(value1 != null){
+                                                Boolean b = null;
+                                                for(DocumentChange doc:value1.getDocumentChanges()){
+                                                    b = doc.getDocument().getBoolean(Constants.KEY_STATUS);
+                                                    if(b != null && b)
+                                                        break;
+                                                }
+                                                conversations.get(index).setStatus(b != null && b);
+                                                conversationGroupAdapter.notifyItemChanged(index);
+                                            }
+                                        });
+                            }
                             break;
                         }
                     }

@@ -13,6 +13,15 @@ public class Group implements Serializable {
     private String mLastMessage;
     private List<String> watcheds;
     private Date dateTime;
+    private boolean status = false;
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 
     public Group(){}
 
