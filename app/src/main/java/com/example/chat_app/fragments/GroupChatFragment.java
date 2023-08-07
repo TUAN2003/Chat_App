@@ -104,7 +104,7 @@ public class GroupChatFragment extends Fragment implements ConversationGRListene
                         list.remove(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID));
                         database.collection(Constants.KEY_COLLECTION_USERS)
                                 .whereIn(Constants.KEY_USER_ID,list)
-                                .addSnapshotListener((value1, error1) -> {
+                                .addSnapshotListener(parentActivity,(value1, error1) -> {
                                     if (error1 != null)
                                         return;
                                     int index = conversations.indexOf(groupChat);
