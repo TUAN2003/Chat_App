@@ -81,7 +81,7 @@ public class ChatGroupActivity extends AppCompatActivity {
         String inputMessage = binding.inputMessage.getText().toString().trim();
         HashMap<String, Object> message = new HashMap<>();
         message.put(Constants.KEY_SENDER_ID, SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID));
-        message.put(Constants.KEY_GROUP_ID, groupChat.getIdGroup());
+        message.put(Constants.KEY_GROUP_ID, groupChat.id);
         message.put(Constants.KEY_MESSAGE, inputMessage);
         message.put(Constants.KEY_TIMESTAMP, new Date());
         database.collection(Constants.KEY_COLLECTION_CHAT)
@@ -92,14 +92,14 @@ public class ChatGroupActivity extends AppCompatActivity {
 
     private void loadReceiverDetails() {
         groupChat = (Group) getIntent().getSerializableExtra(Constants.KEY_COLLECTION_GROUPS);
-        binding.textName.setText(groupChat.getNameGroup());
+        binding.textName.setText(groupChat.name);
     }
 
     private void init() {
         binding.progressBar.setVisibility(View.VISIBLE);
         database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USERS)
-                .whereIn(Constants.KEY_USER_ID, groupChat.getIdMember())
+                .whereIn(Constants.KEY_USER_ID, groupChat.idMembers)
                 .get()
                 .addOnCompleteListener(task -> {
                     usersImage = new HashMap<>();
@@ -123,7 +123,7 @@ public class ChatGroupActivity extends AppCompatActivity {
 
     private void listenerMessage() {
         database.collection(Constants.KEY_COLLECTION_CHAT)
-                .whereEqualTo(Constants.KEY_GROUP_ID, groupChat.getIdGroup())
+                .whereEqualTo(Constants.KEY_GROUP_ID, groupChat.id)
                 .addSnapshotListener(ChatGroupActivity.this,eventListener);
     }
 
@@ -162,16 +162,16 @@ public class ChatGroupActivity extends AppCompatActivity {
     private void updateConversion(String message, List<String> watcheds) {
         DocumentReference documentReference =
                 database.collection(Constants.KEY_COLLECTION_GROUPS)
-                        .document(groupChat.getIdGroup());
+                        .document(groupChat.id);
         documentReference.update(
                 Constants.KEY_LAST_MESSAGE, message
-                , Constants.KEY_WATCHEDS, watcheds
+                , Constants.KEY_SEEN_MESSAGES, watcheds
                 , Constants.KEY_TIMESTAMP, new Date());
     }
 
     private void listenerUsersOnline() {
         database.collection(Constants.KEY_COLLECTION_GROUPS)
-                .document(groupChat.getIdGroup())
+                .document(groupChat.id)
                 .addSnapshotListener(this, (value, error) -> {
                     if (error != null)
                         return;
@@ -185,7 +185,7 @@ public class ChatGroupActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         database.collection(Constants.KEY_COLLECTION_GROUPS)
-                .document(groupChat.getIdGroup())
+                .document(groupChat.id)
                 .update(Constants.KEY_USERS_ONLINE, FieldValue.arrayUnion(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)));
     }
 
@@ -193,7 +193,7 @@ public class ChatGroupActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         database.collection(Constants.KEY_COLLECTION_GROUPS)
-                .document(groupChat.getIdGroup())
+                .document(groupChat.id)
                 .update(Constants.KEY_USERS_ONLINE, FieldValue.arrayRemove(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)));
     }
 }

@@ -26,7 +26,7 @@ public final class Constants {
     public static final String KEY_GROUP_ID="groupId";
     public static final String KEY_ID_MEMBERS="idMember";
     public static final String KEY_NAME_GROUP="nameGroup";
-    public static final String KEY_WATCHEDS="watcheds";
+    public static final String KEY_SEEN_MESSAGES="seenMessages";
     public static final String KEY_USERS_ONLINE="usersOnline";
 
     //FIELDS OF INVITATION

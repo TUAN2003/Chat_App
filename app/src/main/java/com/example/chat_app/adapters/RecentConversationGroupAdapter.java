@@ -65,12 +65,12 @@ public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentC
 
         void setData(int position) {
             Group groupChat = groups.get(position);
-            binding.imageProfile.setImageBitmap(getConversionImage(groupChat.getEnCodeImage()));
-            binding.textName.setText(groupChat.getNameGroup());
-            binding.textRecentMessage.setText(groupChat.getLastMessage());
-            binding.textTimeStamp.setText(FunctionGlobal.dateTimeFormat(groupChat.getDate()));
+            binding.imageProfile.setImageBitmap(getConversionImage(groupChat.image));
+            binding.textName.setText(groupChat.name);
+            binding.textRecentMessage.setText(groupChat.lastMessage);
+            binding.textTimeStamp.setText(FunctionGlobal.dateTimeFormat(groupChat.dateTime));
             binding.getRoot().setOnClickListener(v ->
-                    conversationGRListener.onClick(groupChat,groupChat.getIdGroup(),groupChat.getWatcheds()));
+                    conversationGRListener.onClick(groupChat));
             binding.getRoot().setOnLongClickListener(v -> {
                 final BottomSheetDialog bottomSheetDialog=new BottomSheetDialog(((GroupChatFragment) conversationGRListener).requireContext());
                 bottomSheetDialog.setContentView(R.layout.bottomsheet_option_conversation_group);
@@ -80,7 +80,7 @@ public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentC
                 bottomSheetDialog.show();
                 return true;
             });
-            if(groupChat.getWatcheds().contains(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)))
+            if(groupChat.seenMessages.contains(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)))
             {
                 binding.textName.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                 binding.textRecentMessage.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
@@ -97,10 +97,10 @@ public class RecentConversationGroupAdapter extends RecyclerView.Adapter<RecentC
                 binding.lineBottom.setVisibility(View.INVISIBLE);
             else
                 binding.lineBottom.setVisibility(View.VISIBLE);
-            if(groupChat.isStatus())
+            if(groupChat.status)
                 binding.status.setVisibility(View.VISIBLE);
             else
-                binding.status.setVisibility(View.GONE);
+                binding.status.setVisibility(View.INVISIBLE);
         }
     }
 

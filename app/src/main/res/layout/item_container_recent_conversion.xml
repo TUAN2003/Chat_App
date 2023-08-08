@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="70.5dp"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:animateLayoutChanges="false">
 
     <LinearLayout
         android:id="@+id/above"
@@ -21,9 +22,8 @@
             android:layout_marginEnd="@dimen/_15sdp">
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/imageProfile"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/background_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:backgroundTint="@color/main_color_blue"
                 android:scaleType="centerCrop"
                 app:riv_oval="true" />
@@ -33,10 +33,11 @@
                 android:layout_height="13dp"
                 android:layout_gravity="end|bottom"
                 android:background="@drawable/background_image"
-                android:backgroundTint="@color/white">
+                android:backgroundTint="@color/white"
+                android:visibility="invisible">
                 <View
-                    android:layout_width="9dp"
-                    android:layout_height="9dp"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
                     android:layout_gravity="center"
                     android:background="@drawable/background_image"
                     android:backgroundTint="@color/green"/>

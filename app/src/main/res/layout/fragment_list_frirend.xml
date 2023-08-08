@@ -32,11 +32,11 @@
             android:visibility="invisible" />
 
         <TextView
-            android:id="@+id/textErrorMessage"
+            android:id="@+id/textListEmpty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textColor="@color/error"
+            android:textColor="@color/primary_text"
             android:textSize="@dimen/_15ssp"
             android:visibility="gone" />
     </FrameLayout>

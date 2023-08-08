@@ -10,4 +10,5 @@ public class Invitation {
         this.image = image;
         this.name = name;
     }
+    public Invitation(){}
 }

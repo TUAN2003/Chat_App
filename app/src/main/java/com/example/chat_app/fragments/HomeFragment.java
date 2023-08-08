@@ -7,8 +7,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +71,47 @@ public class HomeFragment extends Fragment implements ConversationListener {
         conversationsAdapter =
                 new RecentConversationsAdapter(conversations, this);
         binding.conversationRecyclerView.setAdapter(conversationsAdapter);
+        binding.conversationRecyclerView.setItemAnimator(new RecyclerView.ItemAnimator() {
+            @Override
+            public boolean animateDisappearance(@NonNull RecyclerView.ViewHolder viewHolder, @NonNull ItemHolderInfo preLayoutInfo, @Nullable ItemHolderInfo postLayoutInfo) {
+                return false;
+            }
+
+            @Override
+            public boolean animateAppearance(@NonNull RecyclerView.ViewHolder viewHolder, @Nullable ItemHolderInfo preLayoutInfo, @NonNull ItemHolderInfo postLayoutInfo) {
+                return false;
+            }
+
+            @Override
+            public boolean animatePersistence(@NonNull RecyclerView.ViewHolder viewHolder, @NonNull ItemHolderInfo preLayoutInfo, @NonNull ItemHolderInfo postLayoutInfo) {
+                return false;
+            }
+
+            @Override
+            public boolean animateChange(@NonNull RecyclerView.ViewHolder oldHolder, @NonNull RecyclerView.ViewHolder newHolder, @NonNull ItemHolderInfo preLayoutInfo, @NonNull ItemHolderInfo postLayoutInfo) {
+                return false;
+            }
+
+            @Override
+            public void runPendingAnimations() {
+
+            }
+
+            @Override
+            public void endAnimation(@NonNull RecyclerView.ViewHolder item) {
+
+            }
+
+            @Override
+            public void endAnimations() {
+
+            }
+
+            @Override
+            public boolean isRunning() {
+                return false;
+            }
+        });
         database = FirebaseFirestore.getInstance();
     }
 
@@ -114,7 +157,7 @@ public class HomeFragment extends Fragment implements ConversationListener {
                                 if(value1 != null){
                                     Boolean status = value1.getBoolean(Constants.KEY_STATUS);
                                     conversation.status = (status != null && status);
-                                    conversationsAdapter.notifyItemChanged(conversations.indexOf(conversation),status);
+                                    conversationsAdapter.notifyItemChanged(conversations.indexOf(conversation));
                                 }
                             });
                 } else if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
@@ -126,6 +169,16 @@ public class HomeFragment extends Fragment implements ConversationListener {
                             break;
                         }
                     }
+                } else {
+                    int index = -1;
+                    for (int i = 0; i < conversations.size(); i++) {
+                        if (conversations.get(i).conversationId.equals(conversationId)) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if(index > -1)
+                        conversations.remove(index);
                 }
             }
             Collections.sort(conversations, (o1, o2) -> o2.timestamp.compareTo(o1.timestamp));
@@ -142,7 +195,6 @@ public class HomeFragment extends Fragment implements ConversationListener {
 
     private void updateToken(String token) {
         SignInActivity.preferenceManager.putString(Constants.KEY_FCM_TOKEN, token);
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
         DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USERS).document(
                 SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID)
         );
@@ -153,15 +205,15 @@ public class HomeFragment extends Fragment implements ConversationListener {
     }
 
     @Override
-    public void onConversationClicked(User user, String conversationId, String newMessageOf) {
-        if (SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID).equals(newMessageOf)) {
+    public void onConversationClicked(User user,Conversation conversation) {
+        if (SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID).equals(conversation.newMessageOf)) {
             database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
-                    .document(conversationId)
+                    .document(conversation.conversationId)
                     .update(Constants.KEY_NEW_MESSAGE_OF, "");
         }
         Intent intent = new Intent(parentActivity.getApplicationContext(), ChatActivity.class);
         intent.putExtra(Constants.KEY_USER, user);
-        intent.putExtra(Constants.KEY_CONVERSATION_ID, conversationId);
+        intent.putExtra(Constants.KEY_CONVERSATION_ID, conversation.conversationId);
         startActivity(intent);
     }
 

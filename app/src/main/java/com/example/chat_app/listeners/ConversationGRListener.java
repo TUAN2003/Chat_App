@@ -6,6 +6,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import java.util.List;
 
 public interface ConversationGRListener {
-    void onClick(Group groupChats, String documentId, List<String> watcheds);
+    void onClick(Group groupChats);
     void onClickDeleteBottomSheet(Group groupChat, BottomSheetDialog dialog);
 }

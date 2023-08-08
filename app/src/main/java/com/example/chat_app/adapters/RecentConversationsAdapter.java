@@ -46,16 +46,6 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ConversionViewHolder holder, int position, @NonNull List<Object> payloads) {
-        if(payloads.isEmpty())
-            super.onBindViewHolder(holder,position,payloads);
-        else {
-            boolean status = (payloads.get(0) != null &&(Boolean) payloads.get(0));
-            holder.updateStatus(status);
-        }
-    }
-
-    @Override
     public void onBindViewHolder(@NonNull ConversionViewHolder holder, int position) {
         holder.setData(position);
     }
@@ -85,7 +75,7 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
                 user.id = conversation.receiverId;
                 user.name = conversation.receiverName;
                 user.image = conversation.receiverImage;
-                conversationListener.onConversationClicked(user, conversation.conversationId, conversation.newMessageOf);
+                conversationListener.onConversationClicked(user, conversation);
             });
             binding.getRoot().setOnLongClickListener(v -> {
                 final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(((HomeFragment) conversationListener).requireContext());
@@ -117,7 +107,7 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
             if (status) {
                 binding.status.setVisibility(View.VISIBLE);
             } else {
-                binding.status.setVisibility(View.GONE);
+                binding.status.setVisibility(View.INVISIBLE);
             }
         }
     }

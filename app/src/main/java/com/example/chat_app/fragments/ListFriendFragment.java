@@ -1,5 +1,6 @@
 package com.example.chat_app.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -30,6 +31,7 @@ import java.util.List;
 
 public class ListFriendFragment extends Fragment implements UserListenser {
     private FragmentListFrirendBinding binding;
+    private UsersAdapter usersAdapter;
     private List<User> users;
 
     public ListFriendFragment() {
@@ -44,10 +46,16 @@ public class ListFriendFragment extends Fragment implements UserListenser {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentListFrirendBinding.inflate(inflater, container, false);
+        init();
         getUsers();
         return binding.getRoot();
     }
 
+    private void init(){
+        users = new ArrayList<>();
+        usersAdapter  = new UsersAdapter(users,this);
+        binding.usersRecyclerView.setAdapter(usersAdapter);
+    }
     @Override
     public void onUserClicked(User user) {
         FragmentActivity activity = getActivity();
@@ -78,49 +86,49 @@ public class ListFriendFragment extends Fragment implements UserListenser {
             binding.progressBar.setVisibility(View.INVISIBLE);
     }
 
-    private void showErrorMessage() {
-        binding.textErrorMessage.setText(String.format("%s", "No user available"));
-        binding.textErrorMessage.setVisibility(View.VISIBLE);
+    private void showIfListEmptyOrNull() {
+        binding.textListEmpty.setText(String.format("%s", "Danh sách trống"));
+        binding.textListEmpty.setVisibility(View.VISIBLE);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void getUsers() {
         loading(true);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        String userId = SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID);
-        DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USERS).document(userId);
-        documentReference.get().addOnSuccessListener(
-                        documentSnapshot -> {
-                            loading(false);
-                            final List<String> listFriendId = (List<String>) documentSnapshot.get(Constants.KEY_LIST_FRIEND);
-                            if (listFriendId == null || listFriendId.size() == 0)
-                                return;
-                            database.collection(Constants.KEY_COLLECTION_USERS)
-                                    .whereIn(Constants.KEY_USER_ID, listFriendId)
-                                    .get()
-                                    .addOnCompleteListener(task -> {
-                                        if (task.isSuccessful() && task.getResult() != null) {
-                                            List<User> users = new ArrayList<>();
-                                            for (QueryDocumentSnapshot item : task.getResult()) {
-                                                User user = new User();
-                                                user.name = item.getString(Constants.KEY_NAME);
-                                                user.image = item.getString(Constants.KEY_IMAGE);
-                                                user.email = item.getString(Constants.KEY_EMAIL);
-                                                user.token = item.getString(Constants.KEY_FCM_TOKEN);
-                                                user.numberPhone = item.getString(Constants.KEY_NUMBER_PHONE);
-                                                user.id = item.getId();
-                                                users.add(user);
-                                            }
-                                            if (users.size() > 0) {
-                                                ListFriendFragment.this.users=users;
-                                                UsersAdapter usersAdapter = new UsersAdapter(users, this);
-                                                binding.usersRecyclerView.setAdapter(usersAdapter);
-                                                binding.usersRecyclerView.setVisibility(View.VISIBLE);
-                                            } else
-                                                showErrorMessage();
-                                        } else
-                                            showErrorMessage();
-                                    });
-                        }
-                );
+        String myId = SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID);
+        DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USERS).document(myId);
+        documentReference.get().addOnSuccessListener(documentSnapshot -> {
+                    loading(false);
+                    final List<String> listFriendId = (List<String>) documentSnapshot.get(Constants.KEY_LIST_FRIEND);
+                    if (listFriendId == null || listFriendId.size() == 0){
+                        showIfListEmptyOrNull();
+                        return;
+                    }
+                    database.collection(Constants.KEY_COLLECTION_USERS)
+                            .whereIn(Constants.KEY_USER_ID, listFriendId)
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful() && task.getResult() != null) {
+                                    for (QueryDocumentSnapshot item : task.getResult()) {
+                                        User user = new User(
+                                                item.getId(),
+                                                item.getString(Constants.KEY_NAME),
+                                                item.getString(Constants.KEY_IMAGE),
+                                                item.getString(Constants.KEY_EMAIL),
+                                                item.getString(Constants.KEY_FCM_TOKEN),
+                                                item.getString(Constants.KEY_NUMBER_PHONE),
+                                                null,
+                                                null
+                                        );
+                                        users.add(user);
+                                    }
+                                    usersAdapter.notifyDataSetChanged();
+                                    binding.usersRecyclerView.setVisibility(View.VISIBLE);
+                                }
+                                else
+                                    showIfListEmptyOrNull();
+                            });
+                }
+        );
     }
 }
