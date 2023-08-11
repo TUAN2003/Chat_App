@@ -84,7 +84,7 @@ public class SignUpActivity extends AppCompatActivity {
         String password = binding.inputPassword.getText().toString().trim();
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USERS)
-                .whereEqualTo(Constants.KEY_NAME, name)
+                .whereEqualTo(Constants.KEY_EMAIL, email)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.getResult().getDocuments().size() == 0) {
