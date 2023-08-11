@@ -139,12 +139,13 @@ public class HomeFragment extends Fragment implements ConversationListener {
                         conversation.receiverImage = documentChange.getDocument().getString(Constants.KEY_RECEIVER_IMAGE);
                         conversation.receiverName = documentChange.getDocument().getString(Constants.KEY_RECEIVER_NAME);
                         conversation.receiverId = receiverId;
+                        conversation.lastMessage = "Bạn: " + documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                     } else {
                         conversation.receiverImage = documentChange.getDocument().getString(Constants.KEY_SENDER_IMAGE);
                         conversation.receiverName = documentChange.getDocument().getString(Constants.KEY_SENDER_NAME);
                         conversation.receiverId = senderId;
+                        conversation.lastMessage = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                     }
-                    conversation.lastMessage = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                     conversation.timestamp = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                     conversation.newMessageOf = documentChange.getDocument().getString(Constants.KEY_NEW_MESSAGE_OF);
                     conversation.conversationId = conversationId;
