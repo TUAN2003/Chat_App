@@ -144,7 +144,11 @@ public class HomeFragment extends Fragment implements ConversationListener {
                         conversation.receiverName = documentChange.getDocument().getString(Constants.KEY_SENDER_NAME);
                         conversation.receiverId = senderId;
                     }
-                    conversation.lastMessage = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
+                    conversation.lastSender = documentChange.getDocument().getString(Constants.KEY_LAST_SENDER);
+                    if(SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID).equals(conversation.lastSender))
+                        conversation.lastMessage = "Bạn:  " + documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
+                    else
+                        conversation.lastMessage = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                     conversation.timestamp = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                     conversation.newMessageOf = documentChange.getDocument().getString(Constants.KEY_NEW_MESSAGE_OF);
                     conversation.conversationId = conversationId;
@@ -163,7 +167,11 @@ public class HomeFragment extends Fragment implements ConversationListener {
                 } else if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
                     for (int i = 0; i < conversations.size(); i++) {
                         if (conversations.get(i).conversationId.equals(conversationId)) {
-                            conversations.get(i).lastMessage = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
+                            conversations.get(i).lastSender = documentChange.getDocument().getString(Constants.KEY_LAST_SENDER);
+                            if(!SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID).equals(conversations.get(i).lastSender))
+                                conversations.get(i).lastMessage = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
+                            else
+                                conversations.get(i).lastMessage = "Bạn:  " + documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                             conversations.get(i).timestamp = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                             conversations.get(i).newMessageOf = documentChange.getDocument().getString(Constants.KEY_NEW_MESSAGE_OF);
                             break;

@@ -165,6 +165,7 @@ public class ChatActivity extends AppCompatActivity {
             conversation.put(Constants.KEY_RECEIVER_NAME, receiverUser.name);
             conversation.put(Constants.KEY_RECEIVER_IMAGE, receiverUser.image);
             conversation.put(Constants.KEY_LAST_MESSAGE, binding.inputMessage.getText().toString().trim());
+            conversation.put(Constants.KEY_LAST_SENDER,preferenceManager.getString(Constants.KEY_USER_ID));
             conversation.put(Constants.KEY_TIMESTAMP, new Date());
             conversation.put(Constants.KEY_NEW_MESSAGE_OF, receiverUser.id);
             addConversation(conversation);
@@ -283,7 +284,8 @@ public class ChatActivity extends AppCompatActivity {
         documentReference.update(
                 Constants.KEY_LAST_MESSAGE, message
                 , Constants.KEY_TIMESTAMP, new Date()
-                , Constants.KEY_NEW_MESSAGE_OF, newMessageOf);
+                , Constants.KEY_NEW_MESSAGE_OF, newMessageOf
+                ,Constants.KEY_LAST_SENDER, preferenceManager.getString(Constants.KEY_USER_ID));
     }
 
     private void checkForConversion() {

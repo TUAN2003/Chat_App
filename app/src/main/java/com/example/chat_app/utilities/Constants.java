@@ -45,6 +45,7 @@ public final class Constants {
     public static final String KEY_RECEIVER_IMAGE = "receiverImage";
     public static final String KEY_LAST_MESSAGE = "lastMessage";
     public static final String KEY_NEW_MESSAGE_OF="newMessageOf";
+    public static final String KEY_LAST_SENDER="lastSender";
 
     //PREFERENCE
     public static final String KEY_PREFERENCE_NAME = "chatAppPreference";
