@@ -63,9 +63,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name=".service.AppCloseService"
-            android:stopWithTask="false" />
     </application>
 
 </manifest>
