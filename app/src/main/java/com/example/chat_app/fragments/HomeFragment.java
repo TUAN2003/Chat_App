@@ -138,10 +138,16 @@ public class HomeFragment extends Fragment implements ConversationListener {
                     if (SignInActivity.preferenceManager.getString(Constants.KEY_USER_ID).equals(senderId)) {
                         conversation.receiverImage = documentChange.getDocument().getString(Constants.KEY_RECEIVER_IMAGE);
                         conversation.receiverName = documentChange.getDocument().getString(Constants.KEY_RECEIVER_NAME);
+                        conversation.receiverEmail = documentChange.getDocument().getString(Constants.KEY_RECEIVER_EMAIL);
+                        conversation.receiverToken = documentChange.getDocument().getString(Constants.KEY_RECEIVER_TOKEN);
+                        conversation.receiverNumberPhone = documentChange.getDocument().getString(Constants.KEY_RECEIVER_NUMBER_PHONE);
                         conversation.receiverId = receiverId;
                     } else {
                         conversation.receiverImage = documentChange.getDocument().getString(Constants.KEY_SENDER_IMAGE);
                         conversation.receiverName = documentChange.getDocument().getString(Constants.KEY_SENDER_NAME);
+                        conversation.receiverEmail = documentChange.getDocument().getString(Constants.KEY_SENDER_EMAIL);
+                        conversation.receiverToken = documentChange.getDocument().getString(Constants.KEY_SENDER_TOKEN);
+                        conversation.receiverNumberPhone = documentChange.getDocument().getString(Constants.KEY_SENDER_NUMBER_PHONE);
                         conversation.receiverId = senderId;
                     }
                     conversation.lastSender = documentChange.getDocument().getString(Constants.KEY_LAST_SENDER);

@@ -75,6 +75,9 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
                 user.id = conversation.receiverId;
                 user.name = conversation.receiverName;
                 user.image = conversation.receiverImage;
+                user.email = conversation.receiverEmail;
+                user.token = conversation.receiverToken;
+                user.numberPhone = conversation.receiverNumberPhone;
                 conversationListener.onConversationClicked(user, conversation);
             });
             binding.getRoot().setOnLongClickListener(v -> {
