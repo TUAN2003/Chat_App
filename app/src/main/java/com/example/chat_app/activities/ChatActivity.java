@@ -62,7 +62,7 @@ public class ChatActivity extends AppCompatActivity {
         if (error != null)
             return;
         if (value != null) {
-            int count = chatMessages.size();
+            int size = chatMessages.size();
             for (DocumentChange documentChange : value.getDocumentChanges()) {
                 if (documentChange.getType() == DocumentChange.Type.ADDED) {
                     Message chatMessage = new Message();
@@ -75,15 +75,15 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
             Collections.sort(chatMessages, (o1, o2) -> o1.dateObject.compareTo(o2.dateObject));
-            if (count == 0) {
+            if (size == 0) {
                 chatAdapter.notifyDataSetChanged();
+                binding.progressBar.setVisibility(View.GONE);
+                binding.chatRecyclerView.setVisibility(View.VISIBLE);
             } else {
                 chatAdapter.notifyItemRangeInserted(chatMessages.size(), chatMessages.size());
                 binding.chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
             }
-            binding.chatRecyclerView.setVisibility(View.VISIBLE);
         }
-        binding.progressBar.setVisibility(View.GONE);
         if (conversationId == null)
             checkForConversion();
     };
@@ -241,6 +241,7 @@ public class ChatActivity extends AppCompatActivity {
     private void loadReceiverDetails() {
         receiverUser = (User) getIntent().getSerializableExtra(Constants.KEY_USER);
         binding.textName.setText(receiverUser.name);
+        binding.avatar.setImageBitmap(getImage(receiverUser.image));
         conversationId = getIntent().getStringExtra(Constants.KEY_CONVERSATION_ID);
     }
 
@@ -343,5 +344,9 @@ public class ChatActivity extends AppCompatActivity {
             listenAvailabilityOfReceiver();
             statusSwitch(true);
         }
+    }
+    private Bitmap getImage(String encodedImage) {
+        byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
 }
