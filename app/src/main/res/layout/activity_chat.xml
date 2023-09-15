@@ -25,11 +25,11 @@
             android:tint="@color/white" />
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="39dp"
+            android:layout_height="39dp"
             app:riv_oval="true"
             android:scaleType="centerCrop"
-            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_marginStart="@dimen/_10sdp"
             android:layout_toEndOf="@id/imageBack"
             android:layout_centerVertical="true"/>
         <LinearLayout
