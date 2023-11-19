@@ -7,5 +7,4 @@
 ## Plugins
 ## Development
 #### Building for source
-## Docker
 ## License
